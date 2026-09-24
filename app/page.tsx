@@ -1,69 +1,312 @@
-import Image from "next/image";
+const experiments = [
+  {
+    number: "01",
+    slug: "polymarket",
+    title: "Polymarket Trading Bot",
+    type: "Paper trading",
+    status: "Planned",
+    description:
+      "A decision model gets a paper bankroll. Every call, win, and wipeout—logged in public.",
+    action: "View experiment",
+    tone: "bg-[#06b6a8]",
+  },
+  {
+    number: "02",
+    slug: "magic-ball",
+    title: "Magic Jev Ball",
+    type: "Interactive",
+    status: "Planned",
+    description:
+      "Ask a question. Jev turns calibrated probability into suspiciously specific fortune-telling.",
+    action: "Ask the ball",
+    tone: "bg-[#ed7d9b]",
+  },
+  {
+    number: "03",
+    slug: "fool-jev",
+    title: "Fool Jev",
+    type: "Game",
+    status: "Rules loading",
+    description:
+      "A game of misdirection between you and a model built to make decisions. Full rules coming soon.",
+    action: "Coming soon",
+    tone: "bg-[#e9dc58]",
+  },
+  {
+    number: "04",
+    slug: "account-scorer",
+    title: "Twitter Account Scorer",
+    type: "Web experiment",
+    status: "Planned",
+    description:
+      "Put a timeline on trial. Jev scores the account across signal, originality, and terminal posting habits.",
+    action: "Score an account",
+    tone: "bg-[#b5c2ff]",
+  },
+  {
+    number: "05",
+    slug: "flop-detector",
+    title: "Tweet Flop Detector",
+    type: "Web + extension",
+    status: "Planned",
+    description:
+      "Draft first, post later. Get a banger / mid / flop probability split before the timeline gets a vote.",
+    action: "Test a draft",
+    tone: "bg-[#f5a45d]",
+  },
+  {
+    number: "06",
+    slug: "feed-referee",
+    title: "Feed Referee",
+    type: "Browser extension",
+    status: "Planned",
+    description:
+      "A live referee for your X feed, labeling posts as ragebait, PR, ad, or actual content while you scroll.",
+    action: "Watch demo",
+    tone: "bg-[#d7d7d2]",
+  },
+  {
+    number: "07",
+    slug: "you-vs-jev",
+    title: "You vs Jev",
+    type: "Speed test",
+    status: "Planned",
+    description:
+      "One hundred items. Five categories. You click while Jev sorts in parallel. Fastest mind wins.",
+    action: "Start the race",
+    tone: "bg-[#f17ce5]",
+  },
+] as const;
+
+function Arrow() {
+  return <span aria-hidden="true">↗</span>;
+}
+
+function ExperimentVisual({ slug }: { slug: (typeof experiments)[number]["slug"] }) {
+  if (slug === "polymarket") {
+    return (
+      <div className="grid h-full grid-cols-5 items-end gap-2 px-6 pb-6 pt-12 sm:px-10">
+        {[42, 68, 54, 88, 74].map((height, index) => (
+          <div key={height} className="relative border-x border-t border-black/70 bg-[#dff8f1]" style={{ height: `${height}%` }}>
+            <span className="absolute -top-6 left-0 font-mono text-[9px]">0{index + 1}</span>
+          </div>
+        ))}
+        <div className="absolute left-5 top-5 border border-black bg-[#f4f4ef] px-2 py-1 font-mono text-[10px] uppercase">
+          Paper P&amp;L +12.8%
+        </div>
+      </div>
+    );
+  }
+
+  if (slug === "magic-ball") {
+    return (
+      <div className="flex h-full items-center justify-center">
+        <div className="relative flex aspect-square h-[78%] items-center justify-center rounded-full border border-black bg-[#202020] shadow-[10px_10px_0_rgba(255,255,255,0.3)]">
+          <div className="flex size-[46%] rotate-3 items-center justify-center border border-white/60 bg-[#6554cf] px-3 text-center font-mono text-[10px] uppercase text-white sm:text-xs">
+            Very likely
+            <br />
+            82%
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (slug === "fool-jev") {
+    return (
+      <div className="flex h-full items-center justify-center gap-4 font-mono">
+        <div className="border border-black bg-[#f4f4ef] px-5 py-7 text-5xl">?</div>
+        <div className="text-2xl">VS</div>
+        <div className="border border-black bg-black px-5 py-7 text-5xl text-white">?</div>
+      </div>
+    );
+  }
+
+  if (slug === "account-scorer") {
+    return (
+      <div className="mx-auto flex h-full max-w-sm items-center px-6">
+        <div className="w-full border border-black bg-[#f4f4ef] shadow-[7px_7px_0_#1e1e1e]">
+          <div className="flex items-center gap-3 border-b border-black p-3">
+            <div className="size-9 rounded-full border border-black bg-[#b5c2ff]" />
+            <div className="font-mono text-[10px] uppercase">@terminally_online</div>
+            <div className="ml-auto text-2xl">74</div>
+          </div>
+          <div className="grid grid-cols-3 divide-x divide-black text-center font-mono text-[9px] uppercase">
+            <div className="p-3">Signal<br /><b>81</b></div>
+            <div className="p-3">Original<br /><b>68</b></div>
+            <div className="p-3">Posting<br /><b>92</b></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (slug === "flop-detector") {
+    return (
+      <div className="flex h-full items-center justify-center px-6">
+        <div className="w-full max-w-sm border border-black bg-[#f4f4ef] p-4">
+          <p className="mb-5 text-sm">just shipped something nobody asked for...</p>
+          <div className="grid grid-cols-3 gap-1 font-mono text-[9px] uppercase">
+            <div className="bg-[#06b6a8] p-2">Banger<br /><b className="text-lg">61</b></div>
+            <div className="bg-[#e9dc58] p-2">Mid<br /><b className="text-lg">30</b></div>
+            <div className="bg-[#ed7d9b] p-2">Flop<br /><b className="text-lg">09</b></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (slug === "feed-referee") {
+    return (
+      <div className="flex h-full items-center justify-center px-8">
+        <div className="relative aspect-video w-full max-w-md border border-black bg-[#232323]">
+          <div className="absolute inset-0 grid place-items-center">
+            <div className="grid size-14 place-items-center rounded-full border border-white bg-white/10 text-2xl text-white">▶</div>
+          </div>
+          <span className="absolute left-3 top-3 bg-[#ed7d9b] px-2 py-1 font-mono text-[9px] uppercase">Ragebait · 91%</span>
+          <span className="absolute bottom-3 right-3 font-mono text-[9px] text-white">00:42</span>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative flex h-full items-center justify-center overflow-hidden font-mono">
+      <div className="absolute left-5 top-5 border border-black bg-[#f4f4ef] px-2 py-1 text-[9px] uppercase">Human 00:18.42</div>
+      <div className="absolute right-5 top-5 bg-black px-2 py-1 text-[9px] uppercase text-white">Jev 00:00.83</div>
+      <div className="grid grid-cols-5 gap-1">
+        {Array.from({ length: 25 }, (_, index) => (
+          <div
+            key={index}
+            className={`size-5 border border-black sm:size-7 ${index < 22 ? "bg-[#f4f4ef]" : "bg-black"}`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
+    <main className="min-h-screen overflow-hidden bg-[#d5ddda] text-[#1e1e1e]">
+      <header className="flex h-14 items-stretch justify-between border-b border-black bg-[#f7f7f2] text-sm">
+        <a href="#top" className="flex items-center border-r border-black px-4 font-semibold tracking-tight sm:px-6">
+          JEV EXPERIMENTS
+        </a>
+        <nav aria-label="Primary navigation" className="flex items-stretch font-mono text-[10px] uppercase sm:text-xs">
+          <a href="#experiments" className="hidden items-center border-l border-black px-5 transition-colors hover:bg-[#e9dc58] sm:flex">
+            Experiments
+          </a>
+          <a href="#about" className="flex items-center border-l border-black px-4 transition-colors hover:bg-[#b5c2ff] sm:px-5">
+            About
+          </a>
+          <a href="https://typesafe.ai/" target="_blank" rel="noreferrer" className="hidden items-center border-l border-black bg-[#1e1e1e] px-4 text-white transition-colors hover:bg-[#ed7d9b] hover:text-black sm:flex sm:px-5">
+            What is Jev? <span className="ml-2">↗</span>
+          </a>
+        </nav>
+      </header>
+
+      <section id="top" className="relative border-b border-black px-4 py-10 sm:px-8 sm:py-16 lg:px-12 lg:py-20">
+        <div className="pointer-events-none absolute inset-0 opacity-30 [background-image:radial-gradient(#1e1e1e_0.7px,transparent_0.7px)] [background-size:5px_5px]" />
+        <div className="relative mx-auto max-w-[1500px]">
+          <div className="mb-16 flex items-center justify-between font-mono text-[10px] uppercase sm:mb-24">
+            <span>Independent project · 2026</span>
+            <span className="hidden sm:inline">07 experiments / 01 model</span>
+          </div>
+          <h1 className="flex items-end gap-3 whitespace-nowrap sm:gap-5">
+            <span className="text-[clamp(6rem,14vw,13.5rem)] font-medium leading-[0.72] tracking-[-0.09em]">JEV</span>
+            <span className="mb-[0.08em] border border-black bg-[#ed7d9b] px-[0.18em] py-[0.08em] text-[clamp(1.7rem,5vw,5rem)] font-medium leading-none tracking-[-0.06em]">
+              EXPERIMENTS
+            </span>
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+          <div className="mt-7 grid gap-8 border-t border-black pt-6 md:grid-cols-[1.2fr_0.8fr]">
+            <p className="max-w-3xl text-4xl font-medium leading-[0.96] tracking-[-0.05em] sm:text-6xl lg:text-7xl">
+              Putting programmable common sense to work.
+            </p>
+            <div className="flex max-w-md flex-col justify-between gap-10 md:ml-auto">
+              <p className="text-base leading-relaxed sm:text-lg">
+                Seven attempts to find out what happens when software can make fast, typed judgments—and show its uncertainty.
+              </p>
+              <a href="#experiments" className="flex w-fit items-center gap-8 border border-black bg-[#f7f7f2] px-4 py-3 font-mono text-xs uppercase shadow-[5px_5px_0_#1e1e1e] transition-transform hover:-translate-y-1">
+                Browse the experiments <span>↓</span>
+              </a>
+            </div>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      <section id="experiments" className="bg-[#f7f7f2] px-4 py-16 sm:px-8 lg:px-12 lg:py-24">
+        <div className="mx-auto max-w-[1500px]">
+          <div className="mb-10 grid gap-4 border-b border-black pb-5 md:grid-cols-2">
+            <p className="font-mono text-[10px] uppercase">[ Project index ]</p>
+            <p className="max-w-lg text-2xl font-medium leading-tight tracking-[-0.03em] md:ml-auto">
+              Some live here. Some escape into extensions, bots, and the open internet.
+            </p>
+          </div>
+
+          <div className="grid border-l border-t border-black md:grid-cols-2">
+            {experiments.map((experiment, index) => (
+              <article
+                key={experiment.slug}
+                className={`group relative flex min-h-[520px] flex-col border-b border-r border-black ${index === 0 || index === 6 ? "md:col-span-2" : ""}`}
+              >
+                <div className="flex items-center border-b border-black font-mono text-[9px] uppercase sm:text-[10px]">
+                  <span className="border-r border-black px-3 py-2">{experiment.number}</span>
+                  <span className="px-3 py-2">{experiment.type}</span>
+                  <span className="ml-auto border-l border-black px-3 py-2">{experiment.status}</span>
+                </div>
+
+                <div className={`relative h-60 overflow-hidden border-b border-black ${experiment.tone} ${index === 0 || index === 6 ? "md:h-72" : ""}`}>
+                  <ExperimentVisual slug={experiment.slug} />
+                  <span className="absolute bottom-2 left-2 font-mono text-[8px] uppercase opacity-60">jev://experiment/{experiment.slug}</span>
+                </div>
+
+                <div className="flex flex-1 flex-col p-5 sm:p-7">
+                  <h2 className="max-w-3xl text-4xl font-medium leading-[0.94] tracking-[-0.05em] sm:text-5xl lg:text-6xl">
+                    {experiment.title}
+                  </h2>
+                  <div className="mt-auto flex items-end justify-between gap-6 pt-10">
+                    <p className="max-w-md text-sm leading-relaxed sm:text-base">{experiment.description}</p>
+                    <button
+                      type="button"
+                      className="flex shrink-0 cursor-pointer items-center gap-4 border border-black px-3 py-2 font-mono text-[10px] uppercase transition-colors hover:bg-black hover:text-white"
+                    >
+                      {experiment.action} <Arrow />
+                    </button>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
         </div>
-      </main>
-    </div>
+      </section>
+
+      <section id="about" className="border-y border-black bg-[#ed7d9b] px-4 py-16 sm:px-8 lg:px-12 lg:py-24">
+        <div className="mx-auto grid max-w-[1500px] gap-12 md:grid-cols-2">
+          <p className="font-mono text-[10px] uppercase">[ Why this exists ]</p>
+          <div>
+            <p className="text-4xl font-medium leading-[0.98] tracking-[-0.05em] sm:text-6xl">
+              Jev doesn&apos;t write. It decides.
+            </p>
+            <p className="mt-8 max-w-xl text-base leading-relaxed sm:text-lg">
+              These experiments test where structured judgments are useful, weird, fast, wrong, or unexpectedly fun. Probabilities included. Certainty not guaranteed.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <footer className="bg-[#1e1e1e] px-4 py-8 text-[#f7f7f2] sm:px-8 lg:px-12">
+        <div className="mx-auto flex max-w-[1500px] flex-col justify-between gap-8 font-mono text-[10px] uppercase sm:flex-row sm:items-end">
+          <div>
+            <p className="mb-2 text-xl font-sans normal-case">Jev Experiments</p>
+            <p>An independent project built with TypeSafe&apos;s Jev.</p>
+          </div>
+          <div className="flex gap-6">
+            <a href="#top" className="hover:text-[#ed7d9b]">Back to top ↑</a>
+            <span>Source soon</span>
+          </div>
+        </div>
+      </footer>
+    </main>
   );
 }
