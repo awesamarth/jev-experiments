@@ -9,6 +9,7 @@ const experiments = [
       "A decision model gets a paper bankroll. Every call, win, and wipeout—logged in public.",
     action: "View experiment",
     tone: "bg-[#06b6a8]",
+    surface: "light",
   },
   {
     number: "02",
@@ -20,6 +21,7 @@ const experiments = [
       "Ask a question. Jev turns calibrated probability into suspiciously specific fortune-telling.",
     action: "Ask the ball",
     tone: "bg-[#ed7d9b]",
+    surface: "dark",
   },
   {
     number: "03",
@@ -31,6 +33,7 @@ const experiments = [
       "A game of misdirection between you and a model built to make decisions. Full rules coming soon.",
     action: "Coming soon",
     tone: "bg-[#e9dc58]",
+    surface: "light",
   },
   {
     number: "04",
@@ -42,6 +45,7 @@ const experiments = [
       "Put a timeline on trial. Jev scores the account across signal, originality, and terminal posting habits.",
     action: "Score an account",
     tone: "bg-[#b5c2ff]",
+    surface: "light",
   },
   {
     number: "05",
@@ -53,6 +57,7 @@ const experiments = [
       "Draft first, post later. Get a banger / mid / flop probability split before the timeline gets a vote.",
     action: "Test a draft",
     tone: "bg-[#f5a45d]",
+    surface: "dark",
   },
   {
     number: "06",
@@ -64,6 +69,7 @@ const experiments = [
       "A live referee for your X feed, labeling posts as ragebait, PR, ad, or actual content while you scroll.",
     action: "Watch demo",
     tone: "bg-[#d7d7d2]",
+    surface: "dark",
   },
   {
     number: "07",
@@ -75,6 +81,7 @@ const experiments = [
       "One hundred items. Five categories. You click while Jev sorts in parallel. Fastest mind wins.",
     action: "Start the race",
     tone: "bg-[#f17ce5]",
+    surface: "light",
   },
 ] as const;
 
@@ -144,7 +151,7 @@ function ExperimentVisual({ slug }: { slug: (typeof experiments)[number]["slug"]
   if (slug === "flop-detector") {
     return (
       <div className="flex h-full items-center justify-center px-6">
-        <div className="w-full max-w-sm border border-black bg-[#f4f4ef] p-4">
+        <div className="w-full max-w-sm border border-black bg-[#f4f4ef] p-4 text-[#1e1e1e]">
           <p className="mb-5 text-sm">just shipped something nobody asked for...</p>
           <div className="grid grid-cols-3 gap-1 font-mono text-[9px] uppercase">
             <div className="bg-[#06b6a8] p-2">Banger<br /><b className="text-lg">61</b></div>
@@ -248,15 +255,19 @@ export default function Home() {
             {experiments.map((experiment, index) => (
               <article
                 key={experiment.slug}
-                className={`group relative flex min-h-[520px] flex-col border-b border-r border-black ${index === 0 || index === 6 ? "md:col-span-2" : ""}`}
+                className={`group relative flex min-h-[520px] flex-col border-b border-r border-black ${index === 0 ? "md:col-span-2" : ""} ${
+                  experiment.surface === "dark"
+                    ? "bg-[#1e1e1e] text-[#f7f7f2]"
+                    : "bg-[#f7f7f2] text-[#1e1e1e]"
+                }`}
               >
-                <div className="flex items-center border-b border-black font-mono text-[9px] uppercase sm:text-[10px]">
-                  <span className="border-r border-black px-3 py-2">{experiment.number}</span>
+                <div className={`flex items-center border-b font-mono text-[9px] uppercase sm:text-[10px] ${experiment.surface === "dark" ? "border-white/35" : "border-black"}`}>
+                  <span className={`border-r px-3 py-2 ${experiment.surface === "dark" ? "border-white/35" : "border-black"}`}>{experiment.number}</span>
                   <span className="px-3 py-2">{experiment.type}</span>
-                  <span className="ml-auto border-l border-black px-3 py-2">{experiment.status}</span>
+                  <span className={`ml-auto border-l px-3 py-2 ${experiment.surface === "dark" ? "border-white/35" : "border-black"}`}>{experiment.status}</span>
                 </div>
 
-                <div className={`relative h-60 overflow-hidden border-b border-black ${experiment.tone} ${index === 0 || index === 6 ? "md:h-72" : ""}`}>
+                <div className={`relative h-60 overflow-hidden border-b border-black ${experiment.tone} ${index === 0 ? "md:h-72" : ""}`}>
                   <ExperimentVisual slug={experiment.slug} />
                   <span className="absolute bottom-2 left-2 font-mono text-[8px] uppercase opacity-60">jev://experiment/{experiment.slug}</span>
                 </div>
@@ -269,7 +280,11 @@ export default function Home() {
                     <p className="max-w-md text-sm leading-relaxed sm:text-base">{experiment.description}</p>
                     <button
                       type="button"
-                      className="flex shrink-0 cursor-pointer items-center gap-4 border border-black px-3 py-2 font-mono text-[10px] uppercase transition-colors hover:bg-black hover:text-white"
+                      className={`flex shrink-0 cursor-pointer items-center gap-4 border px-3 py-2 font-mono text-[10px] uppercase transition-colors ${
+                        experiment.surface === "dark"
+                          ? "border-white bg-[#f7f7f2] text-[#1e1e1e] hover:bg-[#1e1e1e] hover:text-[#f7f7f2]"
+                          : "border-black bg-[#1e1e1e] text-[#f7f7f2] hover:bg-[#f7f7f2] hover:text-[#1e1e1e]"
+                      }`}
                     >
                       {experiment.action} <Arrow />
                     </button>
