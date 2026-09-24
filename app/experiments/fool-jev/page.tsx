@@ -5,7 +5,7 @@ import { FoolJev } from "./fool-jev";
 export const metadata: Metadata = {
   title: "Fool Jev — Jev Experiments",
   description:
-    "Convince a Jev-powered security guard to let you through in ten answers or fewer.",
+    "Talk your way into Jumbrella Corporation's restricted biochemical facility in ten answers or fewer.",
 };
 
 export default function FoolJevPage() {
@@ -20,7 +20,7 @@ export default function FoolJevPage() {
         </Link>
         <div className="flex items-stretch font-mono text-[10px] uppercase sm:text-xs">
           <span className="hidden items-center border-l border-black px-5 sm:flex">
-            03 / 07
+            02 / 07
           </span>
           <Link
             href="/#experiments"

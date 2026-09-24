@@ -20,7 +20,7 @@ export default function MagicBallPage() {
         </Link>
         <div className="flex items-stretch font-mono text-[10px] uppercase sm:text-xs">
           <span className="hidden items-center border-l border-black px-5 sm:flex">
-            02 / 07
+            01 / 07
           </span>
           <Link
             href="/#experiments"

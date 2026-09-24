@@ -113,11 +113,11 @@ export async function POST(request: Request) {
     admit: {
       type: "noul",
       instructions:
-        "Based on the complete `conversation`, is this visitor plausibly authorized to enter the secured building? Judge the visitor's testimony as a security guard would.",
+        "Based on the complete `conversation`, is this visitor plausibly authorized to enter Jumbrella Corporation's restricted biochemical research facility? Judge the visitor's testimony as a high-security biochemical checkpoint guard would.",
       criteria: {
-        true: "The story is specific, internally consistent, plausible, responsive to the guard's questions, and provides enough credible detail to justify entry.",
+        true: "The story is specific, internally consistent, operationally plausible, responsive to the guard's questions, and demonstrates credible knowledge of clearance, personnel, restricted sectors, and biosafety requirements relevant to the claimed visit.",
         false:
-          "The story is vague, evasive, contradictory, implausible, unrelated to the questions, or lacks enough credible detail to justify entry.",
+          "The story is vague, evasive, contradictory, operationally implausible, unrelated to the questions, or lacks credible clearance and biosafety details required for entry into a restricted biochemical facility.",
       },
     },
   };
@@ -150,7 +150,8 @@ export async function POST(request: Request) {
       apiKey,
       JSON.stringify({
         state: {
-          setting: "A visitor is requesting entry at a secured building checkpoint.",
+          setting:
+            "A visitor is requesting entry at Jumbrella Corporation, a high-security biochemical research company with restricted laboratories and containment sectors.",
           conversation,
         },
         model: "jev-latest",

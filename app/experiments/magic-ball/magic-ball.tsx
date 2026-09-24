@@ -111,7 +111,7 @@ export function MagicBall() {
               Jev Ball
             </h1>
             <p className="mt-8 max-w-md text-base leading-relaxed text-white/70 sm:text-lg">
-              Ask what&apos;s on your mind. Jev decides yes, no, or maybe. The ball chooses the words.
+              Ask what&apos;s on your mind. Jev answers.
             </p>
           </div>
 
