@@ -86,7 +86,14 @@ const experiments = [
 ] as const;
 
 function Arrow() {
-  return <span aria-hidden="true">↗</span>;
+  return (
+    <span
+      aria-hidden="true"
+      className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+    >
+      ↗
+    </span>
+  );
 }
 
 function ExperimentVisual({ slug }: { slug: (typeof experiments)[number]["slug"] }) {
@@ -113,8 +120,8 @@ function ExperimentVisual({ slug }: { slug: (typeof experiments)[number]["slug"]
           Decision incoming
         </span>
 
-        <div className="relative mt-10 aspect-square h-[112%] max-h-[310px] rounded-full border border-white/20 bg-[radial-gradient(circle_at_30%_20%,#8e8b92_0%,#35343a_13%,#111114_42%,#020203_72%)] shadow-[0_24px_60px_rgba(0,0,0,0.7)]">
-          <div className="absolute left-[20%] top-[11%] h-[16%] w-[27%] -rotate-[24deg] rounded-[50%] bg-white/25 blur-md" />
+        <div className="relative mt-10 aspect-square h-[112%] max-h-[310px] rounded-full border border-white/20 bg-[radial-gradient(circle_at_30%_20%,#8e8b92_0%,#35343a_13%,#111114_42%,#020203_72%)] shadow-[0_24px_60px_rgba(0,0,0,0.7)] transition-transform duration-700 ease-out group-hover:rotate-2 group-hover:scale-[1.025]">
+          <div className="absolute left-[20%] top-[11%] h-[16%] w-[27%] -rotate-[24deg] rounded-[50%] bg-white/25 blur-md transition-transform duration-700 group-hover:translate-x-2 group-hover:translate-y-1" />
           <div className="absolute inset-[20%] rounded-full border border-white/15 bg-[radial-gradient(circle_at_45%_35%,#2c2b31,#050506_70%)] shadow-[inset_0_8px_18px_rgba(0,0,0,0.9)]">
             <div className="absolute left-1/2 top-1/2 h-[62%] w-[72%] -translate-x-1/2 -translate-y-[66%] [clip-path:polygon(50%_0,100%_100%,0_100%)] bg-[#665be8] drop-shadow-[0_0_18px_rgba(113,99,255,0.65)]" />
             <p className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 text-center font-mono text-[9px] font-medium uppercase leading-[1.05] text-white sm:text-[11px]">
@@ -302,22 +309,25 @@ export default function Home() {
 
           <div className="grid border-l border-t border-black md:grid-cols-2">
             {experiments.map((experiment, index) => (
-              <article
+              <a
                 key={experiment.slug}
-                className={`group relative flex min-h-[520px] flex-col border-b border-r border-black ${index === 0 ? "md:col-span-2" : ""} ${
+                href={`/experiments/${experiment.slug}`}
+                className={`group relative flex min-h-[520px] cursor-pointer flex-col border-b border-r border-black focus-visible:z-10 focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-[#ed7d9b] ${index === 0 ? "md:col-span-2" : ""} ${
                   experiment.surface === "dark"
-                    ? "bg-[#1e1e1e] text-[#f7f7f2]"
-                    : "bg-[#f7f7f2] text-[#1e1e1e]"
+                    ? "bg-[#1e1e1e] text-[#f7f7f2] transition-colors duration-300 hover:bg-[#ed7d9b] hover:text-[#1e1e1e]"
+                    : "bg-[#f7f7f2] text-[#1e1e1e] transition-colors duration-300 hover:bg-[#ed7d9b] hover:text-[#1e1e1e]"
                 }`}
               >
-                <div className={`flex items-center border-b font-mono text-[9px] uppercase sm:text-[10px] ${experiment.surface === "dark" ? "border-white/35" : "border-black"}`}>
-                  <span className={`border-r px-3 py-2 ${experiment.surface === "dark" ? "border-white/35" : "border-black"}`}>{experiment.number}</span>
+                <div className={`flex items-center border-b font-mono text-[9px] uppercase transition-colors duration-300 sm:text-[10px] ${experiment.surface === "dark" ? "border-white/35 group-hover:border-black" : "border-black"}`}>
+                  <span className={`border-r px-3 py-2 transition-colors duration-300 ${experiment.surface === "dark" ? "border-white/35 group-hover:border-black" : "border-black"}`}>{experiment.number}</span>
                   <span className="px-3 py-2">{experiment.type}</span>
-                  <span className={`ml-auto border-l px-3 py-2 ${experiment.surface === "dark" ? "border-white/35" : "border-black"}`}>{experiment.status}</span>
+                  <span className={`ml-auto border-l px-3 py-2 transition-colors duration-300 ${experiment.surface === "dark" ? "border-white/35 group-hover:border-black" : "border-black"}`}>{experiment.status}</span>
                 </div>
 
                 <div className={`relative h-60 overflow-hidden border-b border-black ${experiment.tone} ${index === 0 ? "md:h-72" : ""}`}>
-                  <ExperimentVisual slug={experiment.slug} />
+                  <div className="h-full w-full transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.035]">
+                    <ExperimentVisual slug={experiment.slug} />
+                  </div>
                   <span className="absolute bottom-2 left-2 font-mono text-[8px] uppercase opacity-60">jev://experiment/{experiment.slug}</span>
                 </div>
 
@@ -327,19 +337,18 @@ export default function Home() {
                   </h2>
                   <div className="mt-auto flex items-end justify-between gap-6 pt-10">
                     <p className="max-w-md text-sm leading-relaxed sm:text-base">{experiment.description}</p>
-                    <button
-                      type="button"
-                      className={`flex shrink-0 cursor-pointer items-center gap-4 border px-3 py-2 font-mono text-[10px] uppercase transition-colors ${
+                    <span
+                      className={`flex shrink-0 items-center gap-4 border px-3 py-2 font-mono text-[10px] uppercase transition-colors duration-300 ${
                         experiment.surface === "dark"
-                          ? "border-white bg-[#f7f7f2] text-[#1e1e1e] hover:bg-[#1e1e1e] hover:text-[#f7f7f2]"
-                          : "border-black bg-[#1e1e1e] text-[#f7f7f2] hover:bg-[#f7f7f2] hover:text-[#1e1e1e]"
+                          ? "border-white bg-[#f7f7f2] text-[#1e1e1e] group-hover:bg-[#1e1e1e] group-hover:text-[#f7f7f2]"
+                          : "border-black bg-[#1e1e1e] text-[#f7f7f2] group-hover:bg-[#f7f7f2] group-hover:text-[#1e1e1e]"
                       }`}
                     >
                       {experiment.action} <Arrow />
-                    </button>
+                    </span>
                   </div>
                 </div>
-              </article>
+              </a>
             ))}
           </div>
         </div>
