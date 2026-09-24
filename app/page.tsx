@@ -16,7 +16,7 @@ const experiments = [
     slug: "magic-ball",
     title: "Magic Jev Ball",
     type: "Interactive",
-    status: "Planned",
+    status: "Live",
     description:
       "Ask a question. Jev turns calibrated probability into suspiciously specific fortune-telling.",
     action: "Ask the ball",
@@ -28,10 +28,10 @@ const experiments = [
     slug: "fool-jev",
     title: "Fool Jev",
     type: "Game",
-    status: "Rules loading",
+    status: "Live",
     description:
-      "A game of misdirection between you and a model built to make decisions. Full rules coming soon.",
-    action: "Coming soon",
+      "You don't belong here. Convince a Jev-powered security guard to let you through in ten answers or fewer.",
+    action: "Enter checkpoint",
     tone: "bg-[#e9dc58]",
     surface: "light",
   },

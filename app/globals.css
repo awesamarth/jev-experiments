@@ -37,6 +37,74 @@ a {
   -webkit-tap-highlight-color: transparent;
 }
 
+.security-scrollbar {
+  scrollbar-color: #252927 #d7d9d3;
+  scrollbar-width: thin;
+}
+
+.security-scrollbar::-webkit-scrollbar {
+  width: 7px;
+}
+
+.security-scrollbar::-webkit-scrollbar-track {
+  background: #d7d9d3;
+  border-left: 1px solid #171918;
+}
+
+.security-scrollbar::-webkit-scrollbar-thumb {
+  background: #252927;
+  border: 1px solid #d7d9d3;
+  border-radius: 0;
+}
+
+.security-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #e7b85c;
+}
+
+@keyframes magic-float {
+  0%,
+  100% {
+    transform: translateY(0) rotateX(0deg) rotateY(0deg);
+  }
+  50% {
+    transform: translateY(-12px) rotateX(1deg) rotateY(-2deg);
+  }
+}
+
+@keyframes magic-shake {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  20% {
+    transform: translate3d(-9px, 3px, 0) rotate(-2deg);
+  }
+  40% {
+    transform: translate3d(8px, -4px, 0) rotate(2deg);
+  }
+  60% {
+    transform: translate3d(-6px, -2px, 0) rotate(-1deg);
+  }
+  80% {
+    transform: translate3d(7px, 3px, 0) rotate(1deg);
+  }
+}
+
+@keyframes security-scan {
+  0% {
+    transform: translateY(2.5rem);
+    opacity: 0;
+  }
+  12%,
+  88% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(24rem);
+    opacity: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
