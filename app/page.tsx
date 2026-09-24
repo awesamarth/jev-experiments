@@ -20,7 +20,7 @@ const experiments = [
     description:
       "Ask a question. Jev turns calibrated probability into suspiciously specific fortune-telling.",
     action: "Ask the ball",
-    tone: "bg-[#ed7d9b]",
+    tone: "bg-[#342d49]",
     surface: "dark",
   },
   {
@@ -107,14 +107,31 @@ function ExperimentVisual({ slug }: { slug: (typeof experiments)[number]["slug"]
 
   if (slug === "magic-ball") {
     return (
-      <div className="flex h-full items-center justify-center">
-        <div className="relative flex aspect-square h-[78%] items-center justify-center rounded-full border border-black bg-[#202020] shadow-[10px_10px_0_rgba(255,255,255,0.3)]">
-          <div className="flex size-[46%] rotate-3 items-center justify-center border border-white/60 bg-[#6554cf] px-3 text-center font-mono text-[10px] uppercase text-white sm:text-xs">
-            Very likely
-            <br />
-            82%
+      <div className="relative flex h-full items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 opacity-20 [background-image:radial-gradient(#fff_0.7px,transparent_0.7px)] [background-size:7px_7px]" />
+        <span className="absolute left-4 top-4 z-20 border border-white/50 bg-black/30 px-2 py-1 font-mono text-[8px] uppercase text-white">
+          Decision incoming
+        </span>
+
+        <div className="relative mt-10 aspect-square h-[112%] max-h-[310px] rounded-full border border-white/20 bg-[radial-gradient(circle_at_30%_20%,#8e8b92_0%,#35343a_13%,#111114_42%,#020203_72%)] shadow-[0_24px_60px_rgba(0,0,0,0.7)]">
+          <div className="absolute left-[20%] top-[11%] h-[16%] w-[27%] -rotate-[24deg] rounded-[50%] bg-white/25 blur-md" />
+          <div className="absolute inset-[20%] rounded-full border border-white/15 bg-[radial-gradient(circle_at_45%_35%,#2c2b31,#050506_70%)] shadow-[inset_0_8px_18px_rgba(0,0,0,0.9)]">
+            <div className="absolute left-1/2 top-1/2 h-[62%] w-[72%] -translate-x-1/2 -translate-y-[66%] [clip-path:polygon(50%_0,100%_100%,0_100%)] bg-[#665be8] drop-shadow-[0_0_18px_rgba(113,99,255,0.65)]" />
+            <p className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 text-center font-mono text-[9px] font-medium uppercase leading-[1.05] text-white sm:text-[11px]">
+              Signs
+              <br />
+              point to
+              <br />
+              yes
+              <br />
+              <span className="opacity-65">78%</span>
+            </p>
           </div>
         </div>
+
+        <span className="absolute bottom-3 right-4 z-20 font-mono text-[8px] uppercase text-white/65">
+          Ask → Shake → Decide
+        </span>
       </div>
     );
   }
@@ -164,14 +181,46 @@ function ExperimentVisual({ slug }: { slug: (typeof experiments)[number]["slug"]
   }
 
   if (slug === "feed-referee") {
+    const posts = [
+      {
+        handle: "@definitely_unbiased",
+        text: "Everything you know about work is completely wrong. A thread 🧵",
+        label: "Ragebait · 91%",
+        color: "bg-[#ed7d9b]",
+      },
+      {
+        handle: "@growthwizard",
+        text: "I tried this tool for 7 days and my productivity went up 400%.",
+        label: "Promo · 88%",
+        color: "bg-[#e9dc58]",
+      },
+      {
+        handle: "@content_engine",
+        text: "In today’s fast-paced digital world, consistency is the key to success.",
+        label: "AI slop · 94%",
+        color: "bg-[#b5c2ff]",
+      },
+    ];
+
     return (
-      <div className="flex h-full items-center justify-center px-8">
-        <div className="relative aspect-video w-full max-w-md border border-black bg-[#232323]">
-          <div className="absolute inset-0 grid place-items-center">
-            <div className="grid size-14 place-items-center rounded-full border border-white bg-white/10 text-2xl text-white">▶</div>
+      <div className="flex h-full items-center justify-center px-6 py-4 text-[#1e1e1e]">
+        <div className="h-full w-full max-w-md overflow-hidden border border-black bg-[#f7f7f2] shadow-[6px_6px_0_#1e1e1e]">
+          <div className="flex items-center justify-between border-b border-black px-3 py-2">
+            <span className="text-xs font-semibold">Home</span>
+            <span className="font-mono text-[8px] uppercase">Feed Referee: On</span>
           </div>
-          <span className="absolute left-3 top-3 bg-[#ed7d9b] px-2 py-1 font-mono text-[9px] uppercase">Ragebait · 91%</span>
-          <span className="absolute bottom-3 right-3 font-mono text-[9px] text-white">00:42</span>
+          {posts.map((post, index) => (
+            <div key={post.handle} className={`relative flex gap-2 px-3 py-2.5 ${index ? "border-t border-black/30" : ""}`}>
+              <div className="mt-0.5 size-6 shrink-0 rounded-full border border-black bg-[#d7d7d2]" />
+              <div className="min-w-0 pr-20">
+                <p className="truncate font-mono text-[8px]">{post.handle}</p>
+                <p className="mt-1 text-[10px] leading-tight sm:text-[11px]">{post.text}</p>
+              </div>
+              <span className={`absolute right-2 top-2 border border-black px-1.5 py-1 font-mono text-[7px] uppercase ${post.color}`}>
+                {post.label}
+              </span>
+            </div>
+          ))}
         </div>
       </div>
     );
