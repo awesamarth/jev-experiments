@@ -36,8 +36,8 @@ export const FOOL_JEV_QUESTIONS = [
   },
   {
     id: "biosafety",
-    text: "What biosafety protocol applies to your visit?",
-    useWhen: "Useful for testing whether the visitor understands the safety rules relevant to their claimed work.",
+    text: "What protective equipment were you instructed to wear inside your assigned sector?",
+    useWhen: "Useful for testing whether the visitor understands the safety requirements relevant to their claimed work.",
   },
   {
     id: "cargo",

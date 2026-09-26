@@ -12,6 +12,7 @@ type Result = {
   answer: string;
   category: "affirmative" | "neutral" | "negative";
   probability: number;
+  probabilities: Record<"affirmative" | "neutral" | "negative", number>;
   confidence: number;
   model: string;
 };
@@ -92,6 +93,13 @@ export function MagicBall() {
         ? "no"
         : "maybe"
     : null;
+  const lean = result
+    ? result.probability >= 0.8
+      ? `strongly leans ${verdict}`
+      : result.probability >= 0.6
+        ? `leans ${verdict}`
+        : `slightly leans ${verdict}`
+    : null;
 
   return (
     <main className="relative min-h-[calc(100vh-57px)] overflow-hidden bg-[#211d31] text-[#f7f7f2]">
@@ -99,11 +107,11 @@ export function MagicBall() {
       <div className="pointer-events-none absolute -left-40 top-1/3 size-[34rem] rounded-full bg-[#ed7d9b]/20 blur-[130px]" />
       <div className="pointer-events-none absolute -right-40 top-0 size-[40rem] rounded-full bg-[#665be8]/25 blur-[150px]" />
 
-      <div className="relative mx-auto grid min-h-[calc(100vh-57px)] max-w-[1500px] lg:grid-cols-[0.85fr_1.15fr]">
+      <div className="relative grid min-h-[calc(100vh-57px)] w-full lg:grid-cols-[0.85fr_1.15fr]">
         <section className="flex flex-col justify-between border-white/20 px-5 py-10 sm:px-10 lg:border-r lg:px-12 lg:py-14">
           <div>
             <p className="mb-6 font-mono text-[10px] uppercase text-white/55">
-              Experiment 02 · Choice · Jev latest
+              Experiment 01 · Choice · Jev latest
             </p>
             <h1 className="max-w-xl text-6xl font-medium leading-[0.83] tracking-[-0.07em] sm:text-8xl lg:text-[7.5rem]">
               Magic
@@ -150,19 +158,44 @@ export function MagicBall() {
               </div>
             </div>
 
-            <div className="mt-3 flex flex-wrap gap-2">
-              {EXAMPLES.map((example) => (
-                <button
-                  key={example}
-                  type="button"
-                  onClick={() => setQuestion(example)}
-                  disabled={isThinking}
-                  className="cursor-pointer border border-white/25 px-2 py-1.5 font-mono text-[9px] text-white/55 transition-colors hover:border-white hover:text-white disabled:cursor-not-allowed"
-                >
-                  {example}
-                </button>
-              ))}
-            </div>
+            {result ? (
+              <div className="mt-3 border border-white/25 bg-black/15 p-3">
+                <div className="grid grid-cols-3 gap-3 font-mono uppercase">
+                  {([
+                    ["affirmative", "Yes"],
+                    ["neutral", "Maybe"],
+                    ["negative", "No"],
+                  ] as const).map(([category, label]) => (
+                    <div key={category} className={category === result.category ? "text-white" : "text-white/40"}>
+                      <span className="block text-[8px]">{label}</span>
+                      <strong className="text-base font-medium">{Math.round(result.probabilities[category] * 100)}%</strong>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-2 flex h-1 overflow-hidden bg-white/10">
+                  <span className="bg-[#62d39b]" style={{ width: `${result.probabilities.affirmative * 100}%` }} />
+                  <span className="bg-[#e7b85c]" style={{ width: `${result.probabilities.neutral * 100}%` }} />
+                  <span className="bg-[#ed7d9b]" style={{ width: `${result.probabilities.negative * 100}%` }} />
+                </div>
+                <p className="mt-2 font-mono text-[8px] uppercase text-white/40">
+                  How Jev would answer—not real-world odds.
+                </p>
+              </div>
+            ) : (
+              <div className="mt-3 flex flex-wrap gap-2">
+                {EXAMPLES.map((example) => (
+                  <button
+                    key={example}
+                    type="button"
+                    onClick={() => setQuestion(example)}
+                    disabled={isThinking}
+                    className="cursor-pointer border border-white/25 px-2 py-1.5 font-mono text-[9px] text-white/55 transition-colors hover:border-white hover:text-white disabled:cursor-not-allowed"
+                  >
+                    {example}
+                  </button>
+                ))}
+              </div>
+            )}
 
             {error ? (
               <p role="alert" className="mt-4 border-l-2 border-[#ed7d9b] pl-3 text-sm text-[#ffb4c6]">
@@ -192,8 +225,8 @@ export function MagicBall() {
                       {answer}
                     </p>
                     {result && !isThinking ? (
-                      <span className="mt-2 whitespace-nowrap font-mono text-[clamp(0.58rem,1.2vw,0.75rem)] uppercase text-white/65">
-                        {verdict} · {Math.round(result.probability * 100)}%
+                      <span className="mt-2 w-[155%] font-mono text-[clamp(0.52rem,1vw,0.7rem)] uppercase leading-tight text-white/65">
+                        Jev {lean}
                       </span>
                     ) : null}
                   </div>

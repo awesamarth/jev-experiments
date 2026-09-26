@@ -20,13 +20,13 @@ export default function FoolJevPage() {
         </Link>
         <div className="flex items-stretch font-mono text-[10px] uppercase sm:text-xs">
           <span className="hidden items-center border-l border-black px-5 sm:flex">
-            02 / 07
+            <span className="relative -top-px">02 / 07</span>
           </span>
           <Link
             href="/#experiments"
             className="flex items-center border-l border-black bg-[#1e1e1e] px-4 text-white transition-colors hover:bg-[#e7b85c] hover:text-black sm:px-5"
           >
-            ← All experiments
+            <span className="relative -top-px">← All experiments</span>
           </Link>
         </div>
       </header>

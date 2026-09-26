@@ -16,9 +16,9 @@ const experiments = [
     slug: "fool-jev",
     title: "Fool Jev",
     type: "Game",
-    status: "In development",
+    status: "Live",
     description:
-      "You don't belong at Jumbrella Corporation. Talk your way past its biochemical security checkpoint in ten answers or fewer.",
+      "Talk your way past security and into Jumbrella Corporation's restricted wet-lab facility in ten answers or fewer.",
     action: "Enter checkpoint",
     tone: "bg-[#8e9691]",
     surface: "light",
@@ -147,16 +147,16 @@ function ExperimentVisual({ slug }: { slug: (typeof experiments)[number]["slug"]
     return (
       <div className="relative flex h-full items-center justify-center overflow-hidden px-6 py-5 font-mono">
         <div className="absolute inset-0 opacity-20 [background-image:linear-gradient(rgba(255,255,255,0.5)_1px,transparent_1px)] [background-size:100%_6px]" />
-        <div className="relative h-full w-full max-w-md overflow-hidden border border-black bg-[#333836] shadow-[6px_6px_0_#1e1e1e]">
+        <div className="relative aspect-[4/3] h-full max-h-[205px] w-auto max-w-full overflow-hidden border border-black bg-[#333836] shadow-[6px_6px_0_#1e1e1e]">
           <div className="flex items-center justify-between border-b border-black bg-[#d7d9d3] px-3 py-2 text-[7px] uppercase">
             <span>Jumbrella // Entry control</span>
             <span>Cam 03</span>
           </div>
 
-          <div className="absolute bottom-[22%] left-1/2 h-[48%] w-[17%] -translate-x-1/2 rounded-t-[48%] bg-black" />
-          <div className="absolute left-1/2 top-[24%] h-[23%] w-[9%] -translate-x-1/2 rounded-[48%] bg-black" />
-          <div className="absolute left-1/2 top-[21%] h-[5.5%] w-[11%] -translate-x-1/2 rounded-t-[55%] bg-black" />
-          <div className="absolute left-1/2 top-[25.5%] h-[2%] w-[14%] -translate-x-1/2 bg-black" />
+          <div className="absolute bottom-[16%] left-1/2 h-[47%] w-[31%] -translate-x-1/2 rounded-t-[48%] bg-black" />
+          <div className="absolute left-1/2 top-[20%] h-[22%] w-[15%] -translate-x-1/2 rounded-[48%] bg-black" />
+          <div className="absolute left-1/2 top-[17%] h-[6.5%] w-[17%] -translate-x-1/2 rounded-t-[55%] bg-black" />
+          <div className="absolute left-1/2 top-[22.5%] h-[2%] w-[21%] -translate-x-1/2 bg-black" />
 
           <div className="absolute bottom-3 left-3 right-3">
             <div className="mb-1 flex justify-between text-[7px] uppercase text-white/65">
@@ -272,7 +272,7 @@ function ExperimentVisual({ slug }: { slug: (typeof experiments)[number]["slug"]
 export default function Home() {
   return (
     <main className="min-h-screen overflow-hidden bg-[#d5ddda] text-[#1e1e1e]">
-      <header className="flex h-14 items-stretch justify-between border-b border-black bg-[#f7f7f2] text-sm">
+      <header className="flex h-14 items-stretch justify-between border-b border-black bg-[#f7f7f2]">
         <a href="#top" className="flex items-center border-r border-black px-4 font-semibold tracking-tight sm:px-6">
           JEV EXPERIMENTS
         </a>
@@ -328,28 +328,31 @@ export default function Home() {
           </div>
 
           <div className="grid border-l border-t border-black md:grid-cols-2">
-            {experiments.map((experiment) => (
-              <a
+            {experiments.map((experiment) => {
+              const isLive = experiment.slug === "magic-ball" || experiment.slug === "fool-jev";
+
+              return (
+                <a
                 key={experiment.slug}
-                href={experiment.slug === "magic-ball" ? `/experiments/${experiment.slug}` : undefined}
-                aria-disabled={experiment.slug === "magic-ball" ? undefined : true}
-                tabIndex={experiment.slug === "magic-ball" ? undefined : -1}
+                href={isLive ? `/experiments/${experiment.slug}` : undefined}
+                aria-disabled={isLive ? undefined : true}
+                tabIndex={isLive ? undefined : -1}
                 className={`group relative flex min-h-[520px] flex-col border-b border-r border-black ${experiment.slug === "polymarket" ? "md:col-span-2" : ""} ${
-                  experiment.slug === "magic-ball"
-                    ? "cursor-pointer bg-[#1e1e1e] text-[#f7f7f2] transition-colors duration-300 hover:bg-[#ed7d9b] hover:text-[#1e1e1e] focus-visible:z-10 focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-[#ed7d9b]"
+                  isLive
+                    ? `cursor-pointer transition-colors duration-300 hover:bg-[#ed7d9b] hover:text-[#1e1e1e] focus-visible:z-10 focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-[#ed7d9b] ${experiment.surface === "dark" ? "bg-[#1e1e1e] text-[#f7f7f2]" : "bg-[#f7f7f2] text-[#1e1e1e]"}`
                     : "pointer-events-none cursor-default bg-[#d7d7d2] text-[#73736f] grayscale"
                 }`}
               >
-                <div className={`flex items-center border-b font-mono text-[9px] uppercase transition-colors duration-300 sm:text-[10px] ${experiment.slug === "magic-ball" ? "border-white/35 group-hover:border-black" : "border-black/30"}`}>
-                  <span className={`border-r px-3 py-2 transition-colors duration-300 ${experiment.slug === "magic-ball" ? "border-white/35 group-hover:border-black" : "border-black/30"}`}>{experiment.number}</span>
+                <div className={`flex items-center border-b font-mono text-[9px] uppercase transition-colors duration-300 sm:text-[10px] ${isLive && experiment.surface === "dark" ? "border-white/35 group-hover:border-black" : isLive ? "border-black" : "border-black/30"}`}>
+                  <span className={`border-r px-3 py-2 transition-colors duration-300 ${isLive && experiment.surface === "dark" ? "border-white/35 group-hover:border-black" : isLive ? "border-black" : "border-black/30"}`}>{experiment.number}</span>
                   <span className="px-3 py-2">{experiment.type}</span>
-                  <span className={`ml-auto border-l px-3 py-2 transition-colors duration-300 ${experiment.slug === "magic-ball" ? "border-white/35 group-hover:border-black" : "border-black/30"}`}>
-                    {experiment.slug === "magic-ball" ? experiment.status : "Coming soon"}
+                  <span className={`ml-auto border-l px-3 py-2 transition-colors duration-300 ${isLive && experiment.surface === "dark" ? "border-white/35 group-hover:border-black" : isLive ? "border-black" : "border-black/30"}`}>
+                    {isLive ? experiment.status : "Coming soon"}
                   </span>
                 </div>
 
                 <div className={`relative h-60 overflow-hidden border-b border-black/50 ${experiment.tone} ${experiment.slug === "polymarket" ? "md:h-72" : ""}`}>
-                  <div className={`h-full w-full ${experiment.slug === "magic-ball" ? "transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.035]" : "opacity-45"}`}>
+                  <div className={`h-full w-full ${isLive ? "transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.035]" : "opacity-45"}`}>
                     <ExperimentVisual slug={experiment.slug} />
                   </div>
                   <span className="absolute bottom-2 left-2 font-mono text-[8px] uppercase opacity-60">jev://experiment/{experiment.slug}</span>
@@ -361,14 +364,15 @@ export default function Home() {
                   </h2>
                   <div className="mt-auto flex items-end justify-between gap-6 pt-10">
                     <p className="max-w-md text-sm leading-relaxed sm:text-base">{experiment.description}</p>
-                    <span className={`flex shrink-0 items-center gap-4 border px-3 py-2 font-mono text-[10px] uppercase transition-colors duration-300 ${experiment.slug === "magic-ball" ? "border-white bg-[#f7f7f2] text-[#1e1e1e] group-hover:bg-[#1e1e1e] group-hover:text-[#f7f7f2]" : "border-black/30 bg-transparent text-[#73736f]"}`}>
-                      {experiment.slug === "magic-ball" ? experiment.action : "Coming soon"}
-                      {experiment.slug === "magic-ball" ? <Arrow /> : null}
+                    <span className={`flex shrink-0 items-center gap-4 border px-3 py-2 font-mono text-[10px] uppercase transition-colors duration-300 ${isLive ? experiment.surface === "dark" ? "border-white bg-[#f7f7f2] text-[#1e1e1e] group-hover:bg-[#1e1e1e] group-hover:text-[#f7f7f2]" : "border-black bg-[#1e1e1e] text-[#f7f7f2] group-hover:bg-[#f7f7f2] group-hover:text-[#1e1e1e]" : "border-black/30 bg-transparent text-[#73736f]"}`}>
+                      {isLive ? experiment.action : "Coming soon"}
+                      {isLive ? <Arrow /> : null}
                     </span>
                   </div>
                 </div>
-              </a>
-            ))}
+                </a>
+              );
+            })}
           </div>
         </div>
       </section>

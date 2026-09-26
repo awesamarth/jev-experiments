@@ -8,6 +8,7 @@ import {
 } from "@/lib/fool-jev";
 
 const ADMIT_THRESHOLD = 0.87;
+const REJECT_THRESHOLD = 0.05;
 const MAX_QUESTIONS = 10;
 
 type GuardQuestion = {
@@ -21,7 +22,7 @@ type Evaluation = {
   model: string;
 };
 
-type GameStatus = "intro" | "playing" | "won" | "lost";
+type GameStatus = "intro" | "playing" | "won" | "lost" | "rejected";
 
 export function FoolJev() {
   const [conversation, setConversation] = useState<FoolJevExchange[]>([]);
@@ -82,6 +83,8 @@ export function FoolJev() {
 
       if (data.authorizationProbability >= ADMIT_THRESHOLD) {
         setStatus("won");
+      } else if (data.authorizationProbability < REJECT_THRESHOLD) {
+        setStatus("rejected");
       } else if (nextConversation.length >= MAX_QUESTIONS || !data.nextQuestion) {
         setStatus("lost");
       } else {
@@ -136,7 +139,7 @@ export function FoolJev() {
                 Jumbrella.
               </h1>
               <p className="mt-8 max-w-xl text-base leading-relaxed text-white/65 sm:text-lg">
-                You are not authorized to enter. Convince the checkpoint guard that you belong inside Jumbrella&apos;s restricted biochemical facility.
+                You are not authorized to enter. Convince the checkpoint guard that you belong inside Jumbrella&apos;s restricted wet-lab facility.
               </p>
             </div>
 
@@ -162,10 +165,13 @@ export function FoolJev() {
                   <span>Checkpoint J-01</span>
                   <span>Camera live</span>
                 </div>
-                <div className="absolute bottom-[14%] left-1/2 h-[48%] w-[30%] -translate-x-1/2 rounded-t-[48%] bg-[#0d0f0e]" />
-                <div className="absolute left-1/2 top-[22%] h-[22%] w-[15%] -translate-x-1/2 rounded-[48%] bg-[#0d0f0e]" />
-                <div className="absolute left-1/2 top-[19%] h-[6%] w-[17%] -translate-x-1/2 rounded-t-[55%] bg-[#0d0f0e]" />
-                <div className="absolute left-1/2 top-[24%] h-[2%] w-[21%] -translate-x-1/2 bg-[#0d0f0e]" />
+                <div className="absolute bottom-[16%] left-1/2 h-[47%] w-[31%] -translate-x-1/2 rounded-t-[48%] bg-[#0d0f0e]" />
+                <div className="absolute left-1/2 top-[20%] h-[22%] w-[15%] -translate-x-1/2 rounded-[48%] bg-[#0d0f0e]" />
+                <div className="absolute left-1/2 top-[17%] h-[6.5%] w-[17%] -translate-x-1/2 rounded-t-[55%] bg-[#0d0f0e]">
+                  <div className="absolute left-1/2 top-[24%] size-3 -translate-x-1/2 rotate-45 bg-[#e7b85c]" />
+                </div>
+                <div className="absolute left-1/2 top-[22.5%] h-[2%] w-[21%] -translate-x-1/2 bg-[#0d0f0e]" />
+                <div className="absolute left-[56%] top-[52%] h-[8%] w-[5%] [clip-path:polygon(50%_0,100%_20%,88%_78%,50%_100%,12%_78%,0_20%)] bg-[#e7b85c] shadow-[0_0_14px_rgba(231,184,92,0.3)]" />
                 <div className="absolute bottom-0 left-0 right-0 h-[15%] border-t border-black bg-black/25" />
                 <span className="absolute bottom-3 left-3 font-mono text-[8px] uppercase text-white/55">Guard awaiting approach</span>
               </div>
@@ -174,7 +180,7 @@ export function FoolJev() {
                 {[
                   ["10", "answers maximum"],
                   ["87%", "authorization required"],
-                  ["01", "memory-only session"],
+                  ["<5%", "immediate rejection"],
                   ["JEV", "chooses what to ask next"],
                 ].map(([value, label]) => (
                   <div key={label} className="border-b border-r border-black p-4">
@@ -198,7 +204,7 @@ export function FoolJev() {
   const statusColor =
     status === "won"
       ? "#62d39b"
-      : status === "lost"
+      : status === "lost" || status === "rejected"
         ? "#ed6d72"
         : "#e7b85c";
 
@@ -223,12 +229,10 @@ export function FoolJev() {
 
               <div className="absolute bottom-[16%] left-1/2 h-[47%] w-[31%] -translate-x-1/2 rounded-t-[48%] bg-[#0d0f0e] shadow-[0_0_70px_rgba(0,0,0,0.65)]" />
               <div className="absolute left-1/2 top-[20%] h-[22%] w-[15%] -translate-x-1/2 rounded-[48%] bg-[#0d0f0e]" />
-
               <div className="absolute left-1/2 top-[17%] h-[6.5%] w-[17%] -translate-x-1/2 rounded-t-[55%] bg-[#0d0f0e]">
                 <div className="absolute left-1/2 top-[24%] size-3 -translate-x-1/2 rotate-45 bg-[#e7b85c]" />
               </div>
               <div className="absolute left-1/2 top-[22.5%] h-[2%] w-[21%] -translate-x-1/2 bg-[#0d0f0e]" />
-
               <div className="absolute left-[56%] top-[52%] h-[8%] w-[5%] [clip-path:polygon(50%_0,100%_20%,88%_78%,50%_100%,12%_78%,0_20%)] bg-[#e7b85c] shadow-[0_0_14px_rgba(231,184,92,0.3)]" />
               <div className="absolute bottom-0 left-0 right-0 h-[17%] border-t border-white/20 bg-black/30" />
 
@@ -347,14 +351,18 @@ export function FoolJev() {
               </div>
             ) : (
               <div className="my-auto border-y border-black py-10">
-                <p className="font-mono text-[10px] uppercase text-black/45">Final decision</p>
+                <p className="font-mono text-[10px] uppercase text-black/45">
+                  {status === "rejected" ? "Immediate rejection" : "Final decision"}
+                </p>
                 <h1 className={`mt-3 text-6xl font-medium leading-[0.86] tracking-[-0.065em] sm:text-8xl ${status === "won" ? "text-[#17643f]" : "text-[#9d292f]"}`}>
                   {status === "won" ? "Containment access granted." : "Facility access denied."}
                 </h1>
                 <p className="mt-6 max-w-lg text-lg">
                   {status === "won"
                     ? `You fooled Jev in ${conversation.length} ${conversation.length === 1 ? "answer" : "answers"}.`
-                    : "Ten answers weren't enough to clear Jumbrella security."}
+                    : status === "rejected"
+                      ? "Your authorization fell below 5%. Security ended the interview on the spot."
+                      : "Ten answers weren't enough to clear Jumbrella security."}
                 </p>
                 <button
                   type="button"

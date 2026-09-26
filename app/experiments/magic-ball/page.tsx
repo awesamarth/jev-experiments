@@ -20,13 +20,13 @@ export default function MagicBallPage() {
         </Link>
         <div className="flex items-stretch font-mono text-[10px] uppercase sm:text-xs">
           <span className="hidden items-center border-l border-black px-5 sm:flex">
-            01 / 07
+            <span className="relative -top-px">01 / 07</span>
           </span>
           <Link
             href="/#experiments"
             className="flex items-center border-l border-black bg-[#1e1e1e] px-4 text-white transition-colors hover:bg-[#ed7d9b] hover:text-black sm:px-5"
           >
-            ← All experiments
+            <span className="relative -top-px">← All experiments</span>
           </Link>
         </div>
       </header>

@@ -121,6 +121,11 @@ export async function POST(request: Request) {
       answer: getRandomMagicBallResponse(category),
       category,
       probability: answer.probabilities[category] ?? 0,
+      probabilities: {
+        affirmative: answer.probabilities.affirmative ?? 0,
+        neutral: answer.probabilities.neutral ?? 0,
+        negative: answer.probabilities.negative ?? 0,
+      },
       confidence: answer.confidence,
       model: result.model,
       usage: result.usage,
