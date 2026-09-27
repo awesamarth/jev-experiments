@@ -13,6 +13,10 @@
 # testing
 /coverage
 
+# local demo recordings and recording scripts
+/.demo-recordings/
+/scripts/record-*.ts
+
 # next.js
 /.next/
 /out/

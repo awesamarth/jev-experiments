@@ -61,6 +61,38 @@ a {
   background: #e7b85c;
 }
 
+.account-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #596cbe #b5c2ff;
+}
+
+.account-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.account-scrollbar::-webkit-scrollbar-track {
+  background: #b5c2ff;
+}
+
+.account-scrollbar::-webkit-scrollbar-thumb {
+  background: #596cbe;
+  border-radius: 0;
+}
+
+.account-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #1e1e1e;
+}
+
+@keyframes result-nudge {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(4px);
+  }
+}
+
 @keyframes magic-float {
   0%,
   100% {

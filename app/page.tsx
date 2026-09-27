@@ -28,9 +28,9 @@ const experiments = [
     slug: "account-scorer",
     title: "Twitter Account Scorer",
     type: "Web experiment",
-    status: "Planned",
+    status: "Live",
     description:
-      "Put a timeline on trial. Jev scores the account across signal, originality, and terminal posting habits.",
+      "Put a timeline on trial. Jev scores original posts and replies across signal, originality, clarity, and posting habits.",
     action: "Score an account",
     tone: "bg-[#b5c2ff]",
     surface: "light",
@@ -38,11 +38,11 @@ const experiments = [
   {
     number: "04",
     slug: "flop-detector",
-    title: "Tweet Flop Detector",
-    type: "Web + extension",
-    status: "Planned",
+    title: "Banger Alert",
+    type: "Web experiment",
+    status: "Live",
     description:
-      "Draft first, post later. Get a banger / mid / flop probability split before the timeline gets a vote.",
+      "Draft first, post later. Let Jev score your tweet as banger, mid, or flop before the timeline gets a vote.",
     action: "Test a draft",
     tone: "bg-[#f5a45d]",
     surface: "dark",
@@ -64,9 +64,9 @@ const experiments = [
     slug: "you-vs-jev",
     title: "You vs Jev",
     type: "Speed test",
-    status: "Planned",
+    status: "Live",
     description:
-      "One hundred items. Five categories. You click while Jev sorts in parallel. Fastest mind wins.",
+      "Twenty tiny customer messages. Five categories. Race Jev one answer at a time—accuracy first, speed breaks the tie.",
     action: "Start the race",
     tone: "bg-[#f17ce5]",
     surface: "light",
@@ -255,10 +255,10 @@ function ExperimentVisual({ slug }: { slug: (typeof experiments)[number]["slug"]
 
   return (
     <div className="relative flex h-full items-center justify-center overflow-hidden font-mono">
-      <div className="absolute left-5 top-5 border border-black bg-[#f4f4ef] px-2 py-1 text-[9px] uppercase">Human 00:18.42</div>
-      <div className="absolute right-5 top-5 bg-black px-2 py-1 text-[9px] uppercase text-white">Jev 00:00.83</div>
+      <div className="absolute left-5 top-5 border border-black bg-[#f4f4ef] px-2 py-1 text-[9px] uppercase">You / 20</div>
+      <div className="absolute right-5 top-5 bg-black px-2 py-1 text-[9px] uppercase text-white">Jev / 20</div>
       <div className="grid grid-cols-5 gap-1">
-        {Array.from({ length: 25 }, (_, index) => (
+        {Array.from({ length: 20 }, (_, index) => (
           <div
             key={index}
             className={`size-5 border border-black sm:size-7 ${index < 22 ? "bg-[#f4f4ef]" : "bg-black"}`}
@@ -329,7 +329,7 @@ export default function Home() {
 
           <div className="grid border-l border-t border-black md:grid-cols-2">
             {experiments.map((experiment) => {
-              const isLive = experiment.slug === "magic-ball" || experiment.slug === "fool-jev";
+              const isLive = ["magic-ball", "fool-jev", "account-scorer", "flop-detector", "you-vs-jev"].includes(experiment.slug);
 
               return (
                 <a
