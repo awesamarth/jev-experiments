@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import type { AccountPost, AccountReport, AccountScores } from "@/lib/account-scorer";
 import { ScoreShareActions } from "./score-share-actions";
+import { AccountLeaderboard } from "./leaderboard";
 
 const dimensions: { key: keyof AccountScores; label: string; description: string }[] = [
   { key: "signal", label: "Signal", description: "Is there something worth reading?" },
@@ -100,6 +101,7 @@ export function AccountScorer() {
 
   return (
     <main className="grid min-h-[calc(100vh-56px)] lg:grid-cols-[0.88fr_1.12fr]">
+      <div className="lg:col-span-2"><AccountLeaderboard refreshKey={report?.shareId} /></div>
       <section className="flex flex-col bg-[#1e1e1e] px-5 py-9 text-[#f7f7f2] sm:px-10 sm:py-12 lg:border-r lg:border-black lg:px-14">
         <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-widest text-[#b5c2ff]">
           <span>Experiment 03 / Jev latest</span>

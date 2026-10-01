@@ -12,6 +12,25 @@ function database() {
   return neon(url);
 }
 
+export async function getAccountLeaderboard() {
+  const sql = database();
+  const rows = await sql`
+    SELECT id, report->>'handle' AS handle, (report->>'overall')::int AS score,
+      count(*) OVER ()::int AS total
+    FROM (
+      SELECT DISTINCT ON (handle_key) id, report, analyzed_at
+      FROM account_reports
+      ORDER BY handle_key, analyzed_at DESC, id DESC
+    ) latest
+    ORDER BY (report->>'overall')::int DESC, analyzed_at ASC, id ASC
+    LIMIT 100
+  `;
+  return {
+    total: Number(rows[0]?.total ?? 0),
+    entries: rows.map((row) => ({ shareId: String(row.id), handle: String(row.handle), score: Number(row.score) })),
+  };
+}
+
 export async function findLatestReport(handle: string): Promise<AccountReport | null> {
   const sql = database();
   const rows = await sql`
