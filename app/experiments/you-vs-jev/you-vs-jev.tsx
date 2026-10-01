@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { CATEGORIES, shuffleCards, type Category, type TriageCard } from "@/lib/you-vs-jev";
+import { RaceShareActions } from "./race-share-actions";
 
 type Answers = Record<string, Category>;
 type Phase = "ready" | "racing";
@@ -168,6 +169,7 @@ export function YouVsJev() {
                 <p className="mt-6 max-w-md text-base text-black/65">
                   {jevDnf ? "Jev couldn't finish the race. Your answers are still below." : "Most correct wins. If tied, fastest takes it."}
                 </p>
+                <RaceShareActions result={{ winner, humanCorrect, jevCorrect, humanMs: humanFinishedMs ?? 0, jevMs: jevFinishedMs, jevDnf, jevCompleted: jevProgress }} />
                 <a href="#race-results" className="mt-5 inline-flex items-center gap-2 border-b border-black pb-1 font-mono text-[10px] uppercase transition-opacity hover:opacity-60">
                   Scroll for results <span aria-hidden="true" className="inline-block animate-[result-nudge_1.6s_ease-in-out_infinite]">↓</span>
                 </a>
