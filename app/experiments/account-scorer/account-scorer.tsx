@@ -100,26 +100,25 @@ export function AccountScorer() {
   }
 
   return (
-    <main className="grid min-h-[calc(100vh-56px)] lg:grid-cols-[0.88fr_1.12fr]">
+    <main className="grid min-h-[calc(100vh-56px)] content-start lg:grid-cols-[0.88fr_1.12fr] lg:grid-rows-[auto_1fr]">
       <div className="lg:col-span-2"><AccountLeaderboard refreshKey={report?.shareId} /></div>
-      <section className="flex flex-col bg-[#1e1e1e] px-5 py-9 text-[#f7f7f2] sm:px-10 sm:py-12 lg:border-r lg:border-black lg:px-14">
+      <section className={`flex min-w-0 flex-col bg-[#1e1e1e] px-5 text-[#f7f7f2] sm:px-10 lg:border-r lg:border-black lg:px-14 ${report ? "py-6 sm:py-7" : "py-9 sm:py-12"}`}>
         <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-widest text-[#b5c2ff]">
           <span>Experiment 03 / Jev latest</span>
           <span>Public accounts only</span>
         </div>
-        <h1 className={`${report ? "mt-7 text-[clamp(3.5rem,5vw,5.5rem)]" : "mt-9 text-[clamp(3.8rem,7.4vw,7.8rem)]"} max-w-2xl font-medium leading-[0.87] tracking-[-0.075em]`}>
-          {report ? <>Timeline<br />verdict<span className="text-[#b5c2ff]">.</span></> : <>Put your<br />timeline<br />on trial<span className="text-[#b5c2ff]">.</span></>}
+        <h1 className={`${report ? "mt-5 text-[clamp(2.5rem,3.5vw,3.5rem)] leading-none" : "mt-9 text-[clamp(3.8rem,7.4vw,7.8rem)] leading-[0.87]"} max-w-2xl font-medium tracking-[-0.075em]`}>
+          {report ? <>Timeline verdict<span className="text-[#b5c2ff]">.</span></> : <>Put your<br />timeline<br />on trial<span className="text-[#b5c2ff]">.</span></>}
         </h1>
-        {report ? <ScoreShareActions shareId={report.shareId} handle={report.handle} score={report.overall} /> : null}
         {!report ? (
           <p className="mt-7 max-w-md text-base leading-relaxed text-white/65 sm:text-lg">
             Jev reads the posts. The replies. The whole vibe. You get the score.
           </p>
         ) : null}
 
-        <form onSubmit={scoreAccount} className={`${report ? "mt-7" : "mt-12"} max-w-xl`}>
+        <form onSubmit={scoreAccount} className={`${report ? "order-last mt-6 border-t border-white/25 pt-5" : "mt-12"} max-w-xl`}>
           <label htmlFor="account-handle" className="mb-3 block font-mono text-[10px] uppercase text-white/60">
-            X username or profile link
+            {report ? "Score another account" : "X username or profile link"}
           </label>
           <div className="flex border border-white/50 bg-white/[0.05] focus-within:border-[#b5c2ff]">
             <span aria-hidden="true" className="flex items-center border-r border-white/25 px-4 font-mono text-xl text-[#b5c2ff]">{/^https?:\/\//i.test(handle.trim()) ? "↗" : "@"}</span>
@@ -154,9 +153,9 @@ export function AccountScorer() {
         </form>
 
         {report ? (
-          <div ref={reportRef} className="mt-8 border-t border-white/30 pt-7">
-            {wasSaved ? <p className="mb-4 font-mono text-[10px] uppercase text-[#b5c2ff]">Saved analysis</p> : null}
-            <div className="flex items-center gap-4">
+          <div ref={reportRef} className="mt-5">
+            <div className="flex items-center justify-between gap-4 border-y border-white/30 py-5">
+            <div className="flex min-w-0 items-center gap-3">
               {report.avatar.startsWith("https://") ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={report.avatar} alt="" width={56} height={56} className="size-14 rounded-full border border-white/50 object-cover" />
@@ -166,12 +165,13 @@ export function AccountScorer() {
                 <p className="font-mono text-xs text-white/50">@{report.handle}</p>
               </div>
             </div>
-            {report.bio ? <p className="mt-4 max-w-lg text-sm leading-relaxed text-white/60">{report.bio}</p> : null}
-            <div className="mt-7 flex items-end gap-3 border-b border-white/30 pb-5">
-              <span className="text-[clamp(7rem,15vw,12rem)] font-medium leading-[0.8] tracking-[-0.09em] tabular-nums text-[#b5c2ff]">{report.overall}</span>
-              <span className="pb-2 font-mono text-sm text-white/55">/ 100<br />OVERALL</span>
+            <div className="flex shrink-0 items-end gap-2">
+              <span className="text-[clamp(4.5rem,7vw,7rem)] font-medium leading-[0.85] tracking-[-0.06em] tabular-nums text-[#b5c2ff]">{report.overall}</span>
+              <span className="font-mono text-[10px] text-white/55">/ 100<br />OVERALL</span>
             </div>
-            <div className="mt-6 space-y-5">
+            </div>
+            <ScoreShareActions compact shareId={report.shareId} handle={report.handle} score={report.overall} />
+            <div className="mt-5 grid grid-cols-2 gap-x-6 gap-y-4">
               {dimensions.map(({ key, label, description }) => (
                 <div key={key}>
                   <div className="flex items-center justify-between gap-4">
@@ -187,11 +187,11 @@ export function AccountScorer() {
                 </div>
               ))}
             </div>
-            <p className="mt-8 border-t border-white/25 pt-4 font-mono text-[9px] uppercase leading-relaxed text-white/45">
+            <p className="mt-5 border-t border-white/25 pt-3 font-mono text-[9px] uppercase leading-relaxed text-white/45">
               {report.posts.length} original posts · {report.replies.length} replies analysed<br />
               Posts 70% · Replies 30% when available · {report.model}
             </p>
-            <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-white/25 pt-5">
+            <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
               <p className="font-mono text-[10px] uppercase leading-relaxed text-white/55">
                 {wasSaved ? "Saved report" : "Fresh analysis"} · {new Date(report.analyzedAt).toLocaleString("en-US", { dateStyle: "medium", timeStyle: "short" })}
                 {refreshRemaining > 0 ? <><br />Re-analysis available in {Math.ceil(refreshRemaining / 60_000)} min</> : null}
