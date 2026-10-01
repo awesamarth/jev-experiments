@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import type { AccountPost, AccountReport, AccountScores } from "@/lib/account-scorer";
+import { ScoreShareActions } from "./score-share-actions";
 
 const dimensions: { key: keyof AccountScores; label: string; description: string }[] = [
   { key: "signal", label: "Signal", description: "Is there something worth reading?" },
@@ -44,6 +45,8 @@ export function AccountScorer() {
   const [activeTab, setActiveTab] = useState<"posts" | "replies">("posts");
   const [showAll, setShowAll] = useState(false);
   const [isScoring, setIsScoring] = useState(false);
+  const [wasSaved, setWasSaved] = useState(false);
+  const [now, setNow] = useState(() => Date.now());
   const [error, setError] = useState("");
   const reportRef = useRef<HTMLDivElement>(null);
 
@@ -53,26 +56,34 @@ export function AccountScorer() {
     }
   }, [report]);
 
-  async function scoreAccount(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    if (!handle.trim() || isScoring) return;
+  useEffect(() => {
+    if (!report) return;
+    const timer = window.setInterval(() => setNow(Date.now()), 30_000);
+    return () => window.clearInterval(timer);
+  }, [report]);
 
+  const refreshRemaining = report ? Math.max(0, 15 * 60_000 - (now - Date.parse(report.analyzedAt))) : 0;
+
+  async function loadReport(refresh: boolean) {
+    if (!handle.trim() || isScoring) return;
     setError("");
-    setReport(null);
+    if (!refresh) setReport(null);
     setIsScoring(true);
 
     try {
       const response = await fetch("/api/jev/account-scorer", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ handle: handle.trim() }),
+        body: JSON.stringify({ handle: handle.trim(), refresh }),
       });
-      const data = (await response.json()) as AccountReport & { error?: string };
+      const data = (await response.json()) as AccountReport & { error?: string; fromCache?: boolean };
       if (!response.ok) throw new Error(data.error || "Couldn't score this account.");
-      if (!Array.isArray(data.posts) || !Array.isArray(data.replies) || !Number.isFinite(data.overall)) {
+      if (!Array.isArray(data.posts) || !Array.isArray(data.replies) || !Number.isFinite(data.overall) || !data.shareId) {
         throw new Error("An unexpected response came back. Try again.");
       }
       setReport(data);
+      setWasSaved(data.fromCache === true);
+      setNow(Date.now());
       setActiveTab("posts");
       setShowAll(false);
     } catch (caughtError) {
@@ -80,6 +91,11 @@ export function AccountScorer() {
     } finally {
       setIsScoring(false);
     }
+  }
+
+  function scoreAccount(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    void loadReport(false);
   }
 
   return (
@@ -136,6 +152,7 @@ export function AccountScorer() {
 
         {report ? (
           <div ref={reportRef} className="mt-8 border-t border-white/30 pt-7">
+            {wasSaved ? <p className="mb-4 font-mono text-[10px] uppercase text-[#b5c2ff]">Saved analysis · no new Jev call</p> : null}
             <div className="flex items-center gap-4">
               {report.avatar.startsWith("https://") ? (
                 // eslint-disable-next-line @next/next/no-img-element
@@ -151,6 +168,7 @@ export function AccountScorer() {
               <span className="text-[clamp(7rem,15vw,12rem)] font-medium leading-[0.8] tracking-[-0.09em] tabular-nums text-[#b5c2ff]">{report.overall}</span>
               <span className="pb-2 font-mono text-sm text-white/55">/ 100<br />OVERALL</span>
             </div>
+            <a href="#share-score" className="mt-4 inline-flex border-b border-[#b5c2ff] pb-1 font-mono text-[10px] uppercase text-[#b5c2ff] hover:text-white">Share score ↗</a>
             <div className="mt-6 space-y-5">
               {dimensions.map(({ key, label, description }) => (
                 <div key={key}>
@@ -171,6 +189,16 @@ export function AccountScorer() {
               {report.posts.length} original posts · {report.replies.length} replies analysed<br />
               Posts 70% · Replies 30% when available · {report.model}
             </p>
+            <ScoreShareActions shareId={report.shareId} handle={report.handle} score={report.overall} />
+            <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-white/25 pt-5">
+              <p className="font-mono text-[10px] uppercase leading-relaxed text-white/55">
+                {wasSaved ? "Saved report" : "Fresh analysis"} · {new Date(report.analyzedAt).toLocaleString("en-US", { dateStyle: "medium", timeStyle: "short" })}
+                {refreshRemaining > 0 ? <><br />Re-analysis available in {Math.ceil(refreshRemaining / 60_000)} min</> : null}
+              </p>
+              <button type="button" onClick={() => void loadReport(true)} disabled={isScoring || refreshRemaining > 0} className="cursor-pointer border border-white/50 px-4 py-3 font-mono text-[10px] uppercase transition-colors hover:bg-white hover:text-black disabled:cursor-not-allowed disabled:opacity-40">
+                {isScoring ? "Analyzing..." : "Analyze again ↻"}
+              </button>
+            </div>
           </div>
         ) : null}
       </section>

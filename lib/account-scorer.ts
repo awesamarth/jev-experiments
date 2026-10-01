@@ -13,6 +13,8 @@ export type AccountScores = {
 };
 
 export type AccountReport = {
+  shareId: string;
+  analyzedAt: string;
   handle: string;
   name: string;
   bio: string;

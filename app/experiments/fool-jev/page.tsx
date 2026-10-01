@@ -20,7 +20,7 @@ export default function FoolJevPage() {
         </Link>
         <div className="flex items-stretch font-mono text-[10px] uppercase sm:text-xs">
           <span className="hidden items-center border-l border-black px-5 sm:flex">
-            <span className="relative -top-px">02 / 07</span>
+            <span className="relative -top-px">02 / 06</span>
           </span>
           <Link
             href="/#experiments"

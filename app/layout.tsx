@@ -13,9 +13,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://jev-experiments.awesamarth.dev"),
   title: "Jev Experiments — Programmable Common Sense",
   description:
-    "Seven experiments in fast, typed judgments built with TypeSafe's Jev.",
+    "Six experiments in fast, typed judgments built with TypeSafe's Jev.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

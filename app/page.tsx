@@ -71,18 +71,6 @@ const experiments = [
     tone: "bg-[#f17ce5]",
     surface: "light",
   },
-  {
-    number: "07",
-    slug: "polymarket",
-    title: "Polymarket Trading Bot",
-    type: "Paper trading",
-    status: "Planned",
-    description:
-      "A decision model gets a paper bankroll. Every call, win, and wipeout—logged in public.",
-    action: "View experiment",
-    tone: "bg-[#06b6a8]",
-    surface: "light",
-  },
 ] as const;
 
 function Arrow() {
@@ -97,21 +85,6 @@ function Arrow() {
 }
 
 function ExperimentVisual({ slug }: { slug: (typeof experiments)[number]["slug"] }) {
-  if (slug === "polymarket") {
-    return (
-      <div className="grid h-full grid-cols-5 items-end gap-2 px-6 pb-6 pt-12 sm:px-10">
-        {[42, 68, 54, 88, 74].map((height, index) => (
-          <div key={height} className="relative border-x border-t border-black/70 bg-[#dff8f1]" style={{ height: `${height}%` }}>
-            <span className="absolute -top-6 left-0 font-mono text-[9px]">0{index + 1}</span>
-          </div>
-        ))}
-        <div className="absolute left-5 top-5 border border-black bg-[#f4f4ef] px-2 py-1 font-mono text-[10px] uppercase">
-          Paper P&amp;L +12.8%
-        </div>
-      </div>
-    );
-  }
-
   if (slug === "magic-ball") {
     return (
       <div className="relative flex h-full items-center justify-center overflow-hidden">
@@ -294,7 +267,7 @@ export default function Home() {
         <div className="relative mx-auto max-w-[1500px]">
           <div className="mb-16 flex items-center justify-between font-mono text-[10px] uppercase sm:mb-24">
             <span>Independent project · 2026</span>
-            <span className="hidden sm:inline">07 experiments / 01 model</span>
+            <span className="hidden sm:inline">06 experiments / 01 model</span>
           </div>
           <h1 className="flex items-end gap-3 whitespace-nowrap sm:gap-5">
             <span className="text-[clamp(6rem,14vw,13.5rem)] font-medium leading-[0.72] tracking-[-0.09em]">JEV</span>
@@ -308,7 +281,7 @@ export default function Home() {
             </p>
             <div className="flex max-w-md flex-col justify-between gap-10 md:ml-auto">
               <p className="text-base leading-relaxed sm:text-lg">
-                Seven attempts to find out what happens when software can make fast, typed judgments—and show its uncertainty.
+                Six attempts to find out what happens when software can make fast, typed judgments—and show its uncertainty.
               </p>
               <a href="#experiments" className="flex w-fit items-center gap-8 border border-black bg-[#f7f7f2] px-4 py-3 font-mono text-xs uppercase shadow-[5px_5px_0_#1e1e1e] transition-transform hover:-translate-y-1">
                 Browse the experiments <span>↓</span>
@@ -323,7 +296,7 @@ export default function Home() {
           <div className="mb-10 grid gap-4 border-b border-black pb-5 md:grid-cols-2">
             <p className="font-mono text-[10px] uppercase">[ Project index ]</p>
             <p className="max-w-lg text-2xl font-medium leading-tight tracking-[-0.03em] md:ml-auto">
-              Some live here. Some escape into extensions, bots, and the open internet.
+              Five to try now. One more on the drawing board.
             </p>
           </div>
 
@@ -337,7 +310,7 @@ export default function Home() {
                 href={isLive ? `/experiments/${experiment.slug}` : undefined}
                 aria-disabled={isLive ? undefined : true}
                 tabIndex={isLive ? undefined : -1}
-                className={`group relative flex min-h-[520px] flex-col border-b border-r border-black ${experiment.slug === "polymarket" ? "md:col-span-2" : ""} ${
+                className={`group relative flex min-h-[520px] flex-col border-b border-r border-black ${
                   isLive
                     ? `cursor-pointer transition-colors duration-300 hover:bg-[#ed7d9b] hover:text-[#1e1e1e] focus-visible:z-10 focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-[#ed7d9b] ${experiment.surface === "dark" ? "bg-[#1e1e1e] text-[#f7f7f2]" : "bg-[#f7f7f2] text-[#1e1e1e]"}`
                     : "pointer-events-none cursor-default bg-[#d7d7d2] text-[#73736f] grayscale"
@@ -351,7 +324,7 @@ export default function Home() {
                   </span>
                 </div>
 
-                <div className={`relative h-60 overflow-hidden border-b border-black/50 ${experiment.tone} ${experiment.slug === "polymarket" ? "md:h-72" : ""}`}>
+                <div className={`relative h-60 overflow-hidden border-b border-black/50 ${experiment.tone}`}>
                   <div className={`h-full w-full ${isLive ? "transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.035]" : "opacity-45"}`}>
                     <ExperimentVisual slug={experiment.slug} />
                   </div>

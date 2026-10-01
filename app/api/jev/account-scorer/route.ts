@@ -1,4 +1,5 @@
 import type { AccountReport, AccountPost, AccountScores } from "@/lib/account-scorer";
+import { allowScan, findLatestReport, REANALYZE_COOLDOWN_MS, releaseScan, reserveScan, saveReport } from "@/lib/account-reports";
 
 type FxProfile = {
   name?: string;
@@ -29,9 +30,6 @@ type FxResponse = {
 type JevScoreAnswer = { type: "score"; score: number };
 type JevResponse = { model: string; answers: Record<string, JevScoreAnswer> };
 type Dimension = keyof AccountScores;
-
-const reportCache = new Map<string, { report: AccountReport; expiresAt: number }>();
-const REPORT_TTL_MS = 5 * 60_000;
 
 const dimensions: Record<Dimension, { instructions: string; criteria: string[]; weight: number }> = {
   signal: {
@@ -225,6 +223,19 @@ async function evaluateAccount(apiKey: string, posts: AccountPost[], replies: Ac
   return { scores, overall, model: result.model };
 }
 
+export async function GET(request: Request) {
+  const handle = normalizeHandle(new URL(request.url).searchParams.get("handle"));
+  if (!handle) return Response.json({ error: "Enter a valid public X handle." }, { status: 400 });
+  try {
+    const report = await findLatestReport(handle);
+    if (!report) return Response.json({ error: "No saved report yet." }, { status: 404 });
+    return Response.json(report, { headers: { "Cache-Control": "no-store" } });
+  } catch (error) {
+    console.error("Account Scorer lookup error", error);
+    return Response.json({ error: "Couldn't load this report right now." }, { status: 503 });
+  }
+}
+
 export async function POST(request: Request) {
   let payload: unknown;
   try {
@@ -236,20 +247,40 @@ export async function POST(request: Request) {
   const handle = normalizeHandle(
     typeof payload === "object" && payload !== null && "handle" in payload ? payload.handle : null,
   );
-  if (!handle) {
-    return Response.json({ error: "Enter a valid public X handle." }, { status: 400 });
-  }
-  const apiKey = process.env.TYPESAFE_API_KEY;
-  if (!apiKey) return Response.json({ error: "The Jev API key is not configured." }, { status: 500 });
-
+  if (!handle) return Response.json({ error: "Enter a valid public X handle." }, { status: 400 });
+  const refresh = typeof payload === "object" && payload !== null && "refresh" in payload && payload.refresh === true;
   const cacheKey = handle.toLowerCase();
-  const cached = reportCache.get(cacheKey);
-  if (cached && cached.expiresAt > Date.now()) return Response.json(cached.report);
 
+  let token: string | null = null;
+  let saved = false;
   try {
+    const existing = await findLatestReport(handle);
+    if (existing && !refresh) {
+      return Response.json({ ...existing, fromCache: true }, { headers: { "Cache-Control": "no-store" } });
+    }
+    if (existing && refresh && Date.now() - Date.parse(existing.analyzedAt) < REANALYZE_COOLDOWN_MS) {
+      const retryAfter = Math.ceil((REANALYZE_COOLDOWN_MS - (Date.now() - Date.parse(existing.analyzedAt))) / 1000);
+      return Response.json({ error: "This account was analyzed recently. Try again shortly.", retryAfter }, { status: 429 });
+    }
+
+    const apiKey = process.env.TYPESAFE_API_KEY;
+    if (!apiKey) return Response.json({ error: "The Jev API key is not configured." }, { status: 500 });
+
+    token = crypto.randomUUID();
+    if (!await reserveScan(cacheKey, token)) {
+      const newlySaved = await findLatestReport(handle);
+      if (newlySaved && !refresh) return Response.json({ ...newlySaved, fromCache: true });
+      return Response.json({ error: "An analysis is already underway. Try again shortly." }, { status: 409 });
+    }
+    if (!await allowScan(request)) {
+      return Response.json({ error: "Too many analyses right now. Try again later." }, { status: 429 });
+    }
+
     const { profile, posts, replies } = await fetchAccount(handle);
     const { scores, overall, model } = await evaluateAccount(apiKey, posts, replies);
     const report: AccountReport = {
+      shareId: crypto.randomUUID(),
+      analyzedAt: new Date().toISOString(),
       handle: profile.screen_name ?? handle,
       name: profile.name ?? handle,
       bio: profile.description ?? "",
@@ -261,9 +292,9 @@ export async function POST(request: Request) {
       overall,
       model,
     };
-    if (reportCache.size >= 100) reportCache.delete(reportCache.keys().next().value!);
-    reportCache.set(cacheKey, { report, expiresAt: Date.now() + REPORT_TTL_MS });
-    return Response.json(report);
+    await saveReport(report);
+    saved = true;
+    return Response.json({ ...report, fromCache: false }, { headers: { "Cache-Control": "no-store" } });
   } catch (error) {
     console.error("Account Scorer error", error);
     const insufficient = error instanceof Error && error.message.includes("Not enough original");
@@ -271,5 +302,13 @@ export async function POST(request: Request) {
       { error: insufficient ? "Not enough public posts to score this account." : "Couldn't fetch or score this account right now. Try again." },
       { status: insufficient ? 422 : 502 },
     );
+  } finally {
+    if (token) {
+      try {
+        await releaseScan(cacheKey, token, saved);
+      } catch (error) {
+        console.error("Account Scorer scan lock cleanup error", error);
+      }
+    }
   }
 }
