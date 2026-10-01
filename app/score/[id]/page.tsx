@@ -48,6 +48,7 @@ export default async function ScorecardPage({ params }: Props) {
         <section className="border-b border-black bg-[#1e1e1e] px-5 py-12 text-white sm:px-10 lg:border-b-0 lg:border-r lg:px-14 lg:py-16">
           <p className="font-mono text-[10px] uppercase tracking-wider text-[#b5c2ff]">Jev / Timeline verdict / 03</p>
           <h1 className="mt-10 text-[clamp(3rem,6vw,6.5rem)] font-medium leading-[0.9] tracking-[-0.07em]">Jev scored<a href={`https://x.com/${encodeURIComponent(report.handle)}`} target="_blank" rel="noopener noreferrer" className="mt-2 block break-all text-[clamp(2rem,4vw,4.25rem)] leading-[1.05] text-[#b5c2ff] hover:underline focus-visible:underline">@{report.handle}.</a></h1>
+          <ScoreShareActions shareId={report.shareId} handle={report.handle} score={report.overall} />
           <p className="mt-8 text-xl text-white/80">{report.name}</p>
           <p className="mt-2 font-mono text-[10px] uppercase text-white/50">Analyzed {new Date(report.analyzedAt).toLocaleDateString("en-US", { dateStyle: "long", timeZone: "UTC" })} · {report.model}</p>
           <div className="mt-12 flex items-end gap-4 border-y border-white/40 py-7">
@@ -55,7 +56,6 @@ export default async function ScorecardPage({ params }: Props) {
             <span className="pb-1 font-mono text-sm text-white/60">/ 100<br />OVERALL</span>
           </div>
           <p className="mt-5 font-mono text-[10px] uppercase text-white/55">{report.posts.length} original posts · {report.replies.length} replies analyzed</p>
-          <ScoreShareActions shareId={report.shareId} handle={report.handle} score={report.overall} />
           <Link href="/experiments/account-scorer" className="mt-6 inline-flex border-b border-[#b5c2ff] pb-1 font-mono text-xs uppercase text-[#b5c2ff] transition-opacity hover:opacity-70">Put your timeline on trial ↗</Link>
         </section>
 

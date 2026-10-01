@@ -108,6 +108,7 @@ export function AccountScorer() {
         <h1 className={`${report ? "mt-7 text-[clamp(3.5rem,5vw,5.5rem)]" : "mt-9 text-[clamp(3.8rem,7.4vw,7.8rem)]"} max-w-2xl font-medium leading-[0.87] tracking-[-0.075em]`}>
           {report ? <>Timeline<br />verdict<span className="text-[#b5c2ff]">.</span></> : <>Put your<br />timeline<br />on trial<span className="text-[#b5c2ff]">.</span></>}
         </h1>
+        {report ? <ScoreShareActions shareId={report.shareId} handle={report.handle} score={report.overall} /> : null}
         {!report ? (
           <p className="mt-7 max-w-md text-base leading-relaxed text-white/65 sm:text-lg">
             Jev reads the posts. The replies. The whole vibe. You get the score.
@@ -152,7 +153,7 @@ export function AccountScorer() {
 
         {report ? (
           <div ref={reportRef} className="mt-8 border-t border-white/30 pt-7">
-            {wasSaved ? <p className="mb-4 font-mono text-[10px] uppercase text-[#b5c2ff]">Saved analysis · no new Jev call</p> : null}
+            {wasSaved ? <p className="mb-4 font-mono text-[10px] uppercase text-[#b5c2ff]">Saved analysis</p> : null}
             <div className="flex items-center gap-4">
               {report.avatar.startsWith("https://") ? (
                 // eslint-disable-next-line @next/next/no-img-element
@@ -168,7 +169,6 @@ export function AccountScorer() {
               <span className="text-[clamp(7rem,15vw,12rem)] font-medium leading-[0.8] tracking-[-0.09em] tabular-nums text-[#b5c2ff]">{report.overall}</span>
               <span className="pb-2 font-mono text-sm text-white/55">/ 100<br />OVERALL</span>
             </div>
-            <a href="#share-score" className="mt-4 inline-flex border-b border-[#b5c2ff] pb-1 font-mono text-[10px] uppercase text-[#b5c2ff] hover:text-white">Share score ↗</a>
             <div className="mt-6 space-y-5">
               {dimensions.map(({ key, label, description }) => (
                 <div key={key}>
@@ -189,7 +189,6 @@ export function AccountScorer() {
               {report.posts.length} original posts · {report.replies.length} replies analysed<br />
               Posts 70% · Replies 30% when available · {report.model}
             </p>
-            <ScoreShareActions shareId={report.shareId} handle={report.handle} score={report.overall} />
             <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-white/25 pt-5">
               <p className="font-mono text-[10px] uppercase leading-relaxed text-white/55">
                 {wasSaved ? "Saved report" : "Fresh analysis"} · {new Date(report.analyzedAt).toLocaleString("en-US", { dateStyle: "medium", timeStyle: "short" })}
