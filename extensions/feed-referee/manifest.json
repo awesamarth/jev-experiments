@@ -1,0 +1,17 @@
+{
+  "manifest_version": 3,
+  "name": "Feed Referee by Jev Experiments",
+  "version": "1.1.0",
+  "description": "Flag ragebait, promo, AI Slop, and engagement farming across X. Bring your own TypeSafe key.",
+  "minimum_chrome_version": "120",
+  "permissions": ["storage"],
+  "host_permissions": ["https://api.typesafe.ai/*"],
+  "background": { "service_worker": "worker.js", "type": "module" },
+  "action": { "default_title": "Feed Referee", "default_popup": "popup.html" },
+  "content_scripts": [{
+    "matches": ["https://x.com/*", "https://twitter.com/*"],
+    "js": ["content.js"],
+    "run_at": "document_idle"
+  }],
+  "content_security_policy": { "extension_pages": "script-src 'self'; object-src 'none'; connect-src https://api.typesafe.ai" }
+}

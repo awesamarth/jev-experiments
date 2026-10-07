@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Feed Referee</title><link rel="stylesheet" href="popup.css"><script src="popup.js" type="module"></script></head>
+<body>
+  <header><span class="eyebrow">JEV EXPERIMENTS / 05</span><h1>Feed Referee<span>.</span></h1><p>Less bait. Your call.</p></header>
+  <main>
+    <p id="status" class="status" role="status">Loading settings…</p>
+    <form id="settings">
+      <fieldset id="controls" class="settings-controls" aria-label="Feed Referee settings" disabled>
+      <label class="toggle"><span>Referee enabled</span><input id="enabled" type="checkbox" role="switch" disabled></label>
+      <p class="hint">Changes save automatically.</p>
+      <section aria-labelledby="key-title"><h2 id="key-title">Your TypeSafe key</h2>
+        <label class="sr-only" for="key">TypeSafe API key</label>
+        <input id="key" type="password" placeholder="Paste your API key" maxlength="512" autocomplete="off" spellcheck="false">
+        <p id="key-state" class="hint"></p>
+        <label class="check"><input id="remember" type="checkbox">Remember key on this device</label>
+        <p class="hint">Off: key clears when the browser closes or the extension reloads. Saved keys are local, not encrypted or synced.</p>
+        <button id="forget" class="text-button" type="button">Remove saved key & pause</button>
+      </section>
+      <section aria-labelledby="filter-title"><h2 id="filter-title">Your feed, your rules</h2>
+        <label class="toggle"><span>Collapse flagged posts</span><input id="collapse" type="checkbox" role="switch"></label>
+        <p class="hint">Off: labels only. Collapsed posts always have “Show tweet.”</p>
+        <fieldset id="filters"><legend>Collapse these labels</legend>
+          <label class="check"><input type="checkbox" name="filter" value="ragebait">Ragebait</label>
+          <label class="check"><input type="checkbox" name="filter" value="promo">Promo</label>
+          <label class="check"><input type="checkbox" name="filter" value="ai_generated">AI Slop</label>
+          <label class="check"><input type="checkbox" name="filter" value="engagement_farming">Engagement-farming</label>
+          <p class="hint">AI Slop flags AI-like writing patterns, not proven AI authorship.</p>
+          <label class="range-label" for="threshold">Minimum probability <output id="threshold-value">85%</output></label>
+          <input id="threshold" type="range" min="70" max="99" step="1" value="85">
+        </fieldset>
+      </section>
+      <section aria-labelledby="budget-title"><h2 id="budget-title">Request budget</h2>
+        <label class="budget-label" for="limit">Maximum requests per day <input id="limit" type="number" min="10" max="2000" step="1" value="2000" required></label>
+        <p id="usage" class="hint">0 requests today</p>
+        <p class="hint">Across tabs, resets at midnight UTC. Each uncached post uses one request; retries count. This limits requests, not dollar spend.</p>
+      </section>
+      <p class="consent">Enabling sends visible post text across X, including quoted text, directly to TypeSafe using your key. Protected posts shown to you may be included. DMs, composers and drafts are excluded. No cookies, images or browsing history are sent. Model judgments can be wrong.</p>
+      </fieldset>
+      <p id="feedback" role="status" aria-live="polite"></p>
+    </form>
+    <footer><button id="clear" class="text-button" type="button">Clear judgment cache</button><a href="privacy.html" target="_blank" rel="noopener">Privacy & limits ↗</a></footer>
+  </main>
+</body>
+</html>

@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 const experiments = [
   {
     number: "01",
@@ -52,11 +54,11 @@ const experiments = [
     slug: "feed-referee",
     title: "Feed Referee",
     type: "Browser extension",
-    status: "Planned",
+    status: "Live",
     description:
-      "A live referee for your X feed, flagging ragebait, promo, and AI slop while you scroll.",
-    action: "Watch demo",
-    tone: "bg-[#d7d7d2]",
+      "A second opinion for your X feed. Flag ragebait, promo, AI Slop, and engagement farming. Keep the labels, or collapse the noise.",
+    action: "View extension",
+    tone: "bg-[#e9dc58]",
     surface: "dark",
   },
   {
@@ -181,46 +183,16 @@ function ExperimentVisual({ slug }: { slug: (typeof experiments)[number]["slug"]
   }
 
   if (slug === "feed-referee") {
-    const posts = [
-      {
-        handle: "@definitely_unbiased",
-        text: "Everything you know about work is completely wrong. A thread 🧵",
-        label: "Ragebait · 91%",
-        color: "bg-[#ed7d9b]",
-      },
-      {
-        handle: "@growthwizard",
-        text: "I tried this tool for 7 days and my productivity went up 400%.",
-        label: "Promo · 88%",
-        color: "bg-[#e9dc58]",
-      },
-      {
-        handle: "@content_engine",
-        text: "In today’s fast-paced digital world, consistency is the key to success.",
-        label: "AI slop · 94%",
-        color: "bg-[#b5c2ff]",
-      },
-    ];
-
     return (
       <div className="flex h-full items-center justify-center px-6 py-4 text-[#1e1e1e]">
-        <div className="h-full w-full max-w-md overflow-hidden border border-black bg-[#f7f7f2] shadow-[6px_6px_0_#1e1e1e]">
-          <div className="flex items-center justify-between border-b border-black px-3 py-2">
-            <span className="text-xs font-semibold">Home</span>
-            <span className="font-mono text-[8px] uppercase">Feed Referee: On</span>
-          </div>
-          {posts.map((post, index) => (
-            <div key={post.handle} className={`relative flex gap-2 px-3 py-2.5 ${index ? "border-t border-black/30" : ""}`}>
-              <div className="mt-0.5 size-6 shrink-0 rounded-full border border-black bg-[#d7d7d2]" />
-              <div className="min-w-0 pr-20">
-                <p className="truncate font-mono text-[8px]">{post.handle}</p>
-                <p className="mt-1 text-[10px] leading-tight sm:text-[11px]">{post.text}</p>
-              </div>
-              <span className={`absolute right-2 top-2 border border-black px-1.5 py-1 font-mono text-[7px] uppercase ${post.color}`}>
-                {post.label}
-              </span>
-            </div>
-          ))}
+        <div className="relative h-full w-full max-w-md overflow-hidden border border-black bg-black shadow-[6px_6px_0_#1e1e1e]">
+          <Image
+            src="/feed-referee/inline-labels.webp"
+            alt="Feed Referee on a real X post, with Promo and Engagement-farming probabilities."
+            fill
+            sizes="(min-width: 768px) 440px, 90vw"
+            className="object-cover object-top"
+          />
         </div>
       </div>
     );
@@ -296,13 +268,13 @@ export default function Home() {
           <div className="mb-10 grid gap-4 border-b border-black pb-5 md:grid-cols-2">
             <p className="font-mono text-[10px] uppercase">[ Project index ]</p>
             <p className="max-w-lg text-2xl font-medium leading-tight tracking-[-0.03em] md:ml-auto">
-              Five to try now. One more on the drawing board.
+              Five web experiments. One referee for your feed.
             </p>
           </div>
 
           <div className="grid border-l border-t border-black md:grid-cols-2">
             {experiments.map((experiment) => {
-              const isLive = ["magic-ball", "fool-jev", "account-scorer", "flop-detector", "you-vs-jev"].includes(experiment.slug);
+              const isLive = ["magic-ball", "fool-jev", "account-scorer", "flop-detector", "feed-referee", "you-vs-jev"].includes(experiment.slug);
 
               return (
                 <a
@@ -372,7 +344,7 @@ export default function Home() {
           </div>
           <div className="flex gap-6">
             <a href="#top" className="hover:text-[#ed7d9b]">Back to top ↑</a>
-            <span>Source soon</span>
+            <a href="https://github.com/awesamarth/jev-experiments" target="_blank" rel="noreferrer" className="hover:text-[#ed7d9b]">GitHub ↗</a>
           </div>
         </div>
       </footer>

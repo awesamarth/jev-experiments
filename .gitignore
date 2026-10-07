@@ -17,12 +17,16 @@
 /.demo-recordings/
 /scripts/record-*.ts
 
+# isolated extension-testing browser profile and local control files
+/.browser-profiles/
+
 # next.js
 /.next/
 /out/
 
-# production
+# production and local extension release artifacts
 /build
+/dist/
 
 # misc
 .DS_Store
